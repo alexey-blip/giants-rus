@@ -43,7 +43,8 @@
     </div>
     {{ end }}
 
-    <!-- Related -->
+    <!-- Related (only if article has no manual "Читайте также" section) -->
+    {{ if not (findRE "## Читайте также" .RawContent) }}
     {{ $related := .Site.RegularPages.Related . | first 3 }}
     {{ with $related }}
     <div class="related-articles">
@@ -54,6 +55,7 @@
         {{ end }}
       </ul>
     </div>
+    {{ end }}
     {{ end }}
   </div>
 

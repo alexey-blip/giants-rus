@@ -10,8 +10,6 @@ tags:
   - defi
 categories:
   - models
-authors:
-  - Alexey Karanyuk
 ---
 
 Как алгоритмические протоколы заменили книгу ордеров математической формулой, почему пулы ликвидности стали основой децентрализованных бирж и что нужно знать токеномисту при проектировании ликвидности.
@@ -148,6 +146,79 @@ LP зарабатывает на комиссиях от каждого swap. Е
 - **Высокий объём торгов** относительно размера пула (высокий оборот капитала)
 - **Умеренная волатильность** пары токенов (непостоянные потери растут с волатильностью)
 - **Дополнительные стимулы** в виде наград токеном управления протокола (liquidity mining)
+
+## Калькулятор непостоянных потерь
+
+<div style="background:rgba(124,58,237,0.04);border:1px solid rgba(124,58,237,0.15);border-radius:12px;padding:28px;margin:32px 0;" id="il-calc">
+  <div style="font-family:'Space Grotesk',sans-serif;font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.12em;color:#7c3aed;margin-bottom:20px;">Калькулятор непостоянных потерь (constant product AMM)</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:20px;">
+    <div>
+      <label style="display:flex;justify-content:space-between;font-family:'Space Grotesk',sans-serif;font-size:0.82rem;font-weight:500;color:#1a1a2e;margin-bottom:6px;">Изменение цены (r) <span id="il-val-r" style="font-family:'JetBrains Mono',monospace;font-size:0.8rem;color:#7c3aed;background:rgba(124,58,237,0.08);padding:2px 8px;border-radius:4px;">1.00x</span></label>
+      <input type="range" id="il-slider" min="0.1" max="5" step="0.01" value="1" style="width:100%;height:6px;-webkit-appearance:none;appearance:none;background:rgba(0,0,0,0.08);border-radius:3px;outline:none;cursor:pointer;accent-color:#7c3aed;">
+      <div style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:0.68rem;color:#8a8a9a;margin-top:4px;"><span>0.1x</span><span>1x</span><span>5x</span></div>
+    </div>
+    <div>
+      <label style="display:flex;justify-content:space-between;font-family:'Space Grotesk',sans-serif;font-size:0.82rem;font-weight:500;color:#1a1a2e;margin-bottom:6px;">Сумма вложения ($) <span id="il-val-deposit" style="font-family:'JetBrains Mono',monospace;font-size:0.8rem;color:#7c3aed;background:rgba(124,58,237,0.08);padding:2px 8px;border-radius:4px;">10 000</span></label>
+      <input type="range" id="il-deposit" min="100" max="100000" step="100" value="10000" style="width:100%;height:6px;-webkit-appearance:none;appearance:none;background:rgba(0,0,0,0.08);border-radius:3px;outline:none;cursor:pointer;accent-color:#7c3aed;">
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px;">
+    <div style="background:rgba(220,38,38,0.05);border:1px solid rgba(0,0,0,0.08);border-radius:8px;padding:16px;text-align:center;">
+      <div style="font-family:'Space Grotesk',sans-serif;font-size:0.68rem;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:#dc2626;margin-bottom:6px;">Непостоянные потери</div>
+      <div id="il-pct" style="font-family:'JetBrains Mono',monospace;font-size:1.4rem;font-weight:700;color:#dc2626;">0.00%</div>
+    </div>
+    <div style="background:rgba(124,58,237,0.05);border:1px solid rgba(0,0,0,0.08);border-radius:8px;padding:16px;text-align:center;">
+      <div style="font-family:'Space Grotesk',sans-serif;font-size:0.68rem;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:#7c3aed;margin-bottom:6px;">Если держать</div>
+      <div id="il-hold" style="font-family:'JetBrains Mono',monospace;font-size:1.4rem;font-weight:700;color:#7c3aed;">$10 000</div>
+    </div>
+    <div style="background:rgba(5,150,105,0.05);border:1px solid rgba(0,0,0,0.08);border-radius:8px;padding:16px;text-align:center;">
+      <div style="font-family:'Space Grotesk',sans-serif;font-size:0.68rem;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:#059669;margin-bottom:6px;">Если в пуле</div>
+      <div id="il-pool" style="font-family:'JetBrains Mono',monospace;font-size:1.4rem;font-weight:700;color:#059669;">$10 000</div>
+    </div>
+  </div>
+  <div style="background:#f8f7f4;border:1px solid rgba(0,0,0,0.08);border-radius:8px;overflow:hidden;">
+    <svg id="il-svg" viewBox="0 0 700 300" preserveAspectRatio="xMidYMid meet" style="display:block;width:100%;height:300px;"></svg>
+  </div>
+</div>
+<script>
+(function(){
+  var slider=document.getElementById('il-slider'),depositSlider=document.getElementById('il-deposit');
+  var valR=document.getElementById('il-val-r'),valDeposit=document.getElementById('il-val-deposit');
+  var ilPct=document.getElementById('il-pct'),ilHold=document.getElementById('il-hold'),ilPool=document.getElementById('il-pool');
+  var svg=document.getElementById('il-svg');
+  function calcIL(r){return 2*Math.sqrt(r)/(1+r)-1}
+  function fmt(v){return v.toLocaleString('ru-RU',{maximumFractionDigits:0})}
+  function render(){
+    var r=parseFloat(slider.value),deposit=parseFloat(depositSlider.value),il=calcIL(r);
+    valR.textContent=r.toFixed(2)+'x';valDeposit.textContent=fmt(deposit);
+    ilPct.textContent=(il*100).toFixed(2)+'%';
+    var holdValue=deposit*(1+r)/2,poolValue=holdValue*(1+il);
+    ilHold.textContent='$'+fmt(holdValue);ilPool.textContent='$'+fmt(poolValue);
+    var W=700,H=300,pd={t:25,r:25,b:45,l:55},pw=W-pd.l-pd.r,ph=H-pd.t-pd.b;
+    var accent='#7c3aed',red='#dc2626',muted='#8a8a9a';
+    var points=[],minIL=0;
+    for(var i=0;i<=200;i++){var pr=0.1+(i/200)*4.9,pil=calcIL(pr)*100;points.push({r:pr,il:pil});if(pil<minIL)minIL=pil}
+    minIL=Math.floor(minIL/5)*5-5;
+    function xPos(rv){return pd.l+((rv-0.1)/4.9)*pw}
+    function yPos(ilv){return pd.t+(1-(ilv-minIL)/(0-minIL))*ph}
+    var h='';
+    for(var g=0;g<=4;g++){var gv=minIL+(g/4)*(0-minIL),gy=yPos(gv);h+='<line x1="'+pd.l+'" y1="'+gy+'" x2="'+(W-pd.r)+'" y2="'+gy+'" stroke="'+muted+'" stroke-opacity="0.15" stroke-dasharray="4,4"/>';h+='<text x="'+(pd.l-8)+'" y="'+(gy+4)+'" text-anchor="end" fill="'+muted+'" font-size="10" font-family="JetBrains Mono,monospace">'+gv.toFixed(0)+'%</text>'}
+    var xLabels=[0.1,0.5,1,2,3,4,5];
+    for(var xi=0;xi<xLabels.length;xi++){h+='<text x="'+xPos(xLabels[xi])+'" y="'+(H-8)+'" text-anchor="middle" fill="'+muted+'" font-size="10" font-family="JetBrains Mono,monospace">'+xLabels[xi]+'x</text>'}
+    h+='<text x="'+(pd.l+pw/2)+'" y="'+H+'" text-anchor="middle" fill="'+muted+'" font-size="9" font-family="Space Grotesk,sans-serif" font-weight="500">Соотношение цен (r = P₁/P₀)</text>';
+    var polyFill=points.map(function(p){return xPos(p.r)+','+yPos(p.il)}).join(' ');
+    h+='<polygon points="'+xPos(0.1)+','+yPos(0)+' '+polyFill+' '+xPos(5)+','+yPos(0)+'" fill="'+red+'" opacity="0.06"/>';
+    h+='<polyline points="'+polyFill+'" fill="none" stroke="'+red+'" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>';
+    h+='<line x1="'+pd.l+'" y1="'+yPos(0)+'" x2="'+(W-pd.r)+'" y2="'+yPos(0)+'" stroke="'+muted+'" stroke-opacity="0.4" stroke-width="1"/>';
+    var curIL=calcIL(r)*100,cx=xPos(r),cy=yPos(curIL);
+    h+='<line x1="'+cx+'" y1="'+yPos(0)+'" x2="'+cx+'" y2="'+cy+'" stroke="'+accent+'" stroke-width="1" stroke-dasharray="3,3" opacity="0.6"/>';
+    h+='<circle cx="'+cx+'" cy="'+cy+'" r="6" fill="'+accent+'" stroke="#fff" stroke-width="2"/>';
+    h+='<text x="'+Math.min(cx+10,W-pd.r-50)+'" y="'+(cy-10)+'" fill="'+accent+'" font-size="11" font-family="JetBrains Mono,monospace" font-weight="500">'+curIL.toFixed(1)+'%</text>';
+    svg.innerHTML=h;
+  }
+  slider.addEventListener('input',render);depositSlider.addEventListener('input',render);render();
+})();
+</script>
 
 ## Токеномика AMM-протоколов
 

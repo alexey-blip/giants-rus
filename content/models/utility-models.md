@@ -10,8 +10,6 @@ tags:
   - дивиденды
 categories:
   - models
-authors:
-  - Alexey Karanyuk
 ---
 
 Как протоколы создают устойчивый спрос на токен через распределение дохода и сжигание предложения. Формулы доходности, реальные примеры и алгоритм выбора оптимальной модели.
@@ -202,6 +200,96 @@ Buyback yield — ключевая метрика для оценки модел
 **Эффект на цену от размывания:** −20%
 **Итого реальная доходность в USD: отрицательная**
 {{< /callout >}}
+
+## Калькулятор доходности
+
+<div style="background:#fff;border:1px solid rgba(0,0,0,0.08);border-radius:12px;padding:28px 32px;margin:32px 0;" id="uy-calc">
+  <div style="font-family:'Space Grotesk',sans-serif;font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.12em;color:#7c3aed;margin-bottom:20px;">Дивидендная доходность + выкуп</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px 28px;margin-bottom:24px;">
+    <div>
+      <label style="display:flex;justify-content:space-between;font-family:'Space Grotesk',sans-serif;font-size:0.82rem;font-weight:500;color:#1a1a2e;margin-bottom:4px;">Годовая выручка от комиссий ($) <span id="uy-val-rev" style="font-family:'JetBrains Mono',monospace;font-size:0.8rem;color:#7c3aed;background:rgba(124,58,237,0.05);padding:2px 8px;border-radius:4px;">10.0M</span></label>
+      <input type="range" id="uy-rev" min="100000" max="100000000" step="100000" value="10000000" style="width:100%;height:4px;-webkit-appearance:none;appearance:none;background:rgba(0,0,0,0.08);border-radius:2px;outline:none;accent-color:#7c3aed;">
+    </div>
+    <div>
+      <label style="display:flex;justify-content:space-between;font-family:'Space Grotesk',sans-serif;font-size:0.82rem;font-weight:500;color:#1a1a2e;margin-bottom:4px;">Рыночная капитализация (Mcap, $) <span id="uy-val-mcap" style="font-family:'JetBrains Mono',monospace;font-size:0.8rem;color:#7c3aed;background:rgba(124,58,237,0.05);padding:2px 8px;border-radius:4px;">100.0M</span></label>
+      <input type="range" id="uy-mcap" min="1000000" max="1000000000" step="1000000" value="100000000" style="width:100%;height:4px;-webkit-appearance:none;appearance:none;background:rgba(0,0,0,0.08);border-radius:2px;outline:none;accent-color:#7c3aed;">
+    </div>
+    <div>
+      <label style="display:flex;justify-content:space-between;font-family:'Space Grotesk',sans-serif;font-size:0.82rem;font-weight:500;color:#1a1a2e;margin-bottom:4px;">Доля застейканных токенов (%) <span id="uy-val-stake" style="font-family:'JetBrains Mono',monospace;font-size:0.8rem;color:#7c3aed;background:rgba(124,58,237,0.05);padding:2px 8px;border-radius:4px;">40%</span></label>
+      <input type="range" id="uy-stake" min="5" max="95" step="1" value="40" style="width:100%;height:4px;-webkit-appearance:none;appearance:none;background:rgba(0,0,0,0.08);border-radius:2px;outline:none;accent-color:#7c3aed;">
+    </div>
+    <div style="display:flex;gap:28px;">
+      <div style="flex:1;">
+        <label style="display:flex;justify-content:space-between;font-family:'Space Grotesk',sans-serif;font-size:0.82rem;font-weight:500;color:#1a1a2e;margin-bottom:4px;">Выручки → дивиденды (%) <span id="uy-val-divr" style="font-family:'JetBrains Mono',monospace;font-size:0.8rem;color:#7c3aed;background:rgba(124,58,237,0.05);padding:2px 8px;border-radius:4px;">50%</span></label>
+        <input type="range" id="uy-divr" min="0" max="100" step="5" value="50" style="width:100%;height:4px;-webkit-appearance:none;appearance:none;background:rgba(0,0,0,0.08);border-radius:2px;outline:none;accent-color:#7c3aed;">
+      </div>
+      <div style="flex:1;">
+        <label style="display:flex;justify-content:space-between;font-family:'Space Grotesk',sans-serif;font-size:0.82rem;font-weight:500;color:#1a1a2e;margin-bottom:4px;">Выручки → выкуп (%) <span id="uy-val-bbr" style="font-family:'JetBrains Mono',monospace;font-size:0.8rem;color:#7c3aed;background:rgba(124,58,237,0.05);padding:2px 8px;border-radius:4px;">30%</span></label>
+        <input type="range" id="uy-bbr" min="0" max="100" step="5" value="30" style="width:100%;height:4px;-webkit-appearance:none;appearance:none;background:rgba(0,0,0,0.08);border-radius:2px;outline:none;accent-color:#7c3aed;">
+      </div>
+    </div>
+  </div>
+  <div id="uy-warning" style="display:none;padding:10px 14px;margin-bottom:16px;background:rgba(220,38,38,0.08);border:1px solid rgba(220,38,38,0.3);border-radius:8px;font-family:'Space Grotesk',sans-serif;font-size:0.82rem;color:#dc2626;font-weight:500;">Сумма долей на дивиденды и выкуп превышает 100% выручки</div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px;">
+    <div style="background:rgba(124,58,237,0.05);border:1px solid rgba(0,0,0,0.08);border-radius:8px;padding:16px;text-align:center;">
+      <div style="font-family:'Space Grotesk',sans-serif;font-size:0.68rem;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:#7c3aed;margin-bottom:6px;">Дивидендная доходность</div>
+      <div id="uy-card-div" style="font-family:'JetBrains Mono',monospace;font-size:1.4rem;font-weight:700;color:#7c3aed;">12.5%</div>
+    </div>
+    <div style="background:rgba(5,150,105,0.05);border:1px solid rgba(0,0,0,0.08);border-radius:8px;padding:16px;text-align:center;">
+      <div style="font-family:'Space Grotesk',sans-serif;font-size:0.68rem;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:#059669;margin-bottom:6px;">Доходность выкупа</div>
+      <div id="uy-card-bb" style="font-family:'JetBrains Mono',monospace;font-size:1.4rem;font-weight:700;color:#059669;">3.0%</div>
+    </div>
+    <div style="background:rgba(217,119,6,0.05);border:1px solid rgba(0,0,0,0.08);border-radius:8px;padding:16px;text-align:center;">
+      <div style="font-family:'Space Grotesk',sans-serif;font-size:0.68rem;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:#d97706;margin-bottom:6px;">Совокупная доходность</div>
+      <div id="uy-card-total" style="font-family:'JetBrains Mono',monospace;font-size:1.4rem;font-weight:700;color:#d97706;">15.5%</div>
+    </div>
+  </div>
+  <div style="background:#f8f7f4;border:1px solid rgba(0,0,0,0.08);border-radius:8px;overflow:hidden;">
+    <svg id="uy-svg" viewBox="0 0 700 260" preserveAspectRatio="xMidYMid meet" style="display:block;width:100%;height:260px;"></svg>
+  </div>
+  <table style="margin-top:16px;width:100%;border-collapse:collapse;font-size:0.8rem;">
+    <thead><tr>
+      <th style="text-align:left;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:0.7rem;text-transform:uppercase;letter-spacing:0.06em;color:#7c3aed;padding:6px 10px;border-bottom:1px solid rgba(0,0,0,0.08);">Год</th>
+      <th style="text-align:left;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:0.7rem;text-transform:uppercase;letter-spacing:0.06em;color:#7c3aed;padding:6px 10px;border-bottom:1px solid rgba(0,0,0,0.08);">Дивиденды ($)</th>
+      <th style="text-align:left;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:0.7rem;text-transform:uppercase;letter-spacing:0.06em;color:#7c3aed;padding:6px 10px;border-bottom:1px solid rgba(0,0,0,0.08);">Выкуп ($)</th>
+      <th style="text-align:left;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:0.7rem;text-transform:uppercase;letter-spacing:0.06em;color:#7c3aed;padding:6px 10px;border-bottom:1px solid rgba(0,0,0,0.08);">Дох. див.</th>
+      <th style="text-align:left;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:0.7rem;text-transform:uppercase;letter-spacing:0.06em;color:#7c3aed;padding:6px 10px;border-bottom:1px solid rgba(0,0,0,0.08);">Дох. выкуп</th>
+      <th style="text-align:left;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:0.7rem;text-transform:uppercase;letter-spacing:0.06em;color:#7c3aed;padding:6px 10px;border-bottom:1px solid rgba(0,0,0,0.08);">Совокупный</th>
+    </tr></thead>
+    <tbody id="uy-tbody"></tbody>
+  </table>
+</div>
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id)};
+  var sl={rev:$('uy-rev'),mcap:$('uy-mcap'),stake:$('uy-stake'),divr:$('uy-divr'),bbr:$('uy-bbr')};
+  var vl={rev:$('uy-val-rev'),mcap:$('uy-val-mcap'),stake:$('uy-val-stake'),divr:$('uy-val-divr'),bbr:$('uy-val-bbr')};
+  var svg=$('uy-svg'),tbody=$('uy-tbody'),warning=$('uy-warning');
+  var cardDiv=$('uy-card-div'),cardBB=$('uy-card-bb'),cardTotal=$('uy-card-total');
+  function fmtM(v){if(v>=1e9)return(v/1e9).toFixed(1)+'B';if(v>=1e6)return(v/1e6).toFixed(1)+'M';if(v>=1e3)return(v/1e3).toFixed(0)+'K';return v.toFixed(0)}
+  function fmtP(v){return(v*100).toFixed(1)+'%'}
+  function fmtD(v){return'$'+(v>=1e6?(v/1e6).toFixed(2)+'M':v>=1e3?(v/1e3).toFixed(0)+'K':v.toFixed(0))}
+  function render(){
+    var rev=+sl.rev.value,mcap=+sl.mcap.value,stake=+sl.stake.value/100,divR=+sl.divr.value/100,bbR=+sl.bbr.value/100;
+    vl.rev.textContent=fmtM(rev);vl.mcap.textContent=fmtM(mcap);vl.stake.textContent=Math.round(stake*100)+'%';vl.divr.textContent=Math.round(divR*100)+'%';vl.bbr.textContent=Math.round(bbR*100)+'%';
+    if(divR+bbR>1){warning.style.display='block'}else{warning.style.display='none'}
+    var divYield=(rev*divR)/(mcap*stake),bbYield=(rev*bbR)/mcap,combinedYield=divYield+bbYield;
+    cardDiv.textContent=fmtP(divYield);cardBB.textContent=fmtP(bbYield);cardTotal.textContent=fmtP(combinedYield);
+    var W=700,H=260,pd={t:30,r:30,b:50,l:60},pw=W-pd.l-pd.r,ph=H-pd.t-pd.b;
+    var accent='#7c3aed',green='#059669',orange='#d97706',muted='#8a8a9a';
+    var bars=[{label:'Дивиденды',value:divYield,color:accent},{label:'Выкуп',value:bbYield,color:green},{label:'Совокупный',value:combinedYield,color:orange}];
+    var maxVal=Math.max(combinedYield,0.01)*1.2,barW=pw/bars.length*0.4,gap=(pw-barW*bars.length)/(bars.length+1);
+    var h='';
+    for(var g=0;g<=4;g++){var gy=pd.t+(g/4)*ph;h+='<line x1="'+pd.l+'" y1="'+gy+'" x2="'+(W-pd.r)+'" y2="'+gy+'" stroke="'+muted+'" stroke-opacity="0.15" stroke-dasharray="4,4"/>';h+='<text x="'+(pd.l-8)+'" y="'+(gy+4)+'" text-anchor="end" fill="'+muted+'" font-size="10" font-family="JetBrains Mono,monospace">'+fmtP(maxVal*(1-g/4))+'</text>'}
+    for(var i=0;i<bars.length;i++){var bx=pd.l+gap+(barW+gap)*i,bh=Math.max((bars[i].value/maxVal)*ph,2),by=pd.t+ph-bh;h+='<rect x="'+bx+'" y="'+by+'" width="'+barW+'" height="'+bh+'" rx="4" fill="'+bars[i].color+'" opacity="0.8"/>';h+='<text x="'+(bx+barW/2)+'" y="'+(by-8)+'" text-anchor="middle" fill="'+bars[i].color+'" font-size="12" font-weight="600" font-family="JetBrains Mono,monospace">'+fmtP(bars[i].value)+'</text>';h+='<text x="'+(bx+barW/2)+'" y="'+(H-12)+'" text-anchor="middle" fill="'+muted+'" font-size="11" font-family="Space Grotesk,sans-serif">'+bars[i].label+'</text>'}
+    svg.innerHTML=h;
+    var rows='',curRev=rev,curMcap=mcap;
+    for(var y=1;y<=5;y++){var dAmt=curRev*divR,bAmt=curRev*bbR,dy=(curRev*divR)/(curMcap*stake),by2=(curRev*bbR)/curMcap,cy=dy+by2;rows+='<tr><td style="padding:5px 10px;font-family:JetBrains Mono,monospace;font-size:0.78rem;color:#4a4a5a;border-bottom:1px solid rgba(0,0,0,0.06)">'+y+'</td><td style="padding:5px 10px;font-family:JetBrains Mono,monospace;font-size:0.78rem;color:#4a4a5a;border-bottom:1px solid rgba(0,0,0,0.06)">'+fmtD(dAmt)+'</td><td style="padding:5px 10px;font-family:JetBrains Mono,monospace;font-size:0.78rem;color:#4a4a5a;border-bottom:1px solid rgba(0,0,0,0.06)">'+fmtD(bAmt)+'</td><td style="padding:5px 10px;font-family:JetBrains Mono,monospace;font-size:0.78rem;color:'+accent+';border-bottom:1px solid rgba(0,0,0,0.06)">'+fmtP(dy)+'</td><td style="padding:5px 10px;font-family:JetBrains Mono,monospace;font-size:0.78rem;color:'+green+';border-bottom:1px solid rgba(0,0,0,0.06)">'+fmtP(by2)+'</td><td style="padding:5px 10px;font-family:JetBrains Mono,monospace;font-size:0.78rem;font-weight:600;color:'+orange+';border-bottom:1px solid rgba(0,0,0,0.06)">'+fmtP(cy)+'</td></tr>';curRev*=1.1;curMcap*=(1+by2)}
+    tbody.innerHTML=rows;
+  }
+  Object.values(sl).forEach(function(s){s.addEventListener('input',render)});render();
+})();
+</script>
 
 ## Ошибки и подводные камни
 
