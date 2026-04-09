@@ -41,29 +41,14 @@ enableRobotsTXT = true
   category = "categories"
 
 [[menus.main]]
-  name = "Основы"
-  url = "/basics/"
+  name = "База знаний"
+  url = "/knowledge/"
   weight = 10
-
-[[menus.main]]
-  name = "Модели"
-  url = "/models/"
-  weight = 20
-
-[[menus.main]]
-  name = "Governance"
-  url = "/governance/"
-  weight = 30
 
 [[menus.main]]
   name = "Кейсы"
   url = "/cases/"
-  weight = 40
-
-[[menus.main]]
-  name = "Валидаторы"
-  url = "/validators/"
-  weight = 50
+  weight = 20
 
 [[menus.main]]
   name = "О нас"

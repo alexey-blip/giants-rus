@@ -66,6 +66,23 @@
   window.addEventListener('resize', resize);
 })();
 
+// ====== Scroll-triggered animations ======
+(function() {
+  var services = document.getElementById('services');
+  if (!services) return;
+
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in-view');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+
+  observer.observe(services);
+})();
+
 // ====== Interview carousel ======
 function scrollCarousel(dir) {
   var track = document.getElementById('interview-track');

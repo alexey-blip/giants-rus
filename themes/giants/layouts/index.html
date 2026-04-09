@@ -62,49 +62,170 @@
   </div>
 </section>
 
-<!-- Services -->
-<section class="section">
+<!-- Services — 5 stages -->
+<section class="section" id="services">
   <div class="container">
-    <div class="section-label">Что мы делаем</div>
-    <h2 class="section-title">Услуги</h2>
-    <p class="section-subtitle">Полный цикл от исследования до реализации</p>
+    <div class="section-label">Процесс</div>
+    <h2 class="section-title">Полный цикл разработки токеномики</h2>
+    <p class="section-subtitle">5 этапов — от первого звонка до готовой модели с симуляциями. Методология курса МФТИ, проверена на 30+ проектах.</p>
+
     <div class="services-grid">
       <div class="service-card">
-        <div class="service-number">01</div>
-        <h3>Проектирование токеномики</h3>
-        <p>Модели предложения и спроса, механизм-дизайн, балансировка стимулов, симуляция сценариев</p>
+        <div class="service-header">
+          <div class="service-number">01</div>
+          <h3>Концепт</h3>
+        </div>
+        <div class="service-illustration">
+          <svg viewBox="0 0 200 120" fill="none">
+            <circle cx="100" cy="60" r="35" stroke="var(--purple-500)" stroke-width="1" opacity="0.3"/>
+            <circle cx="100" cy="60" r="35" stroke="var(--purple-400)" stroke-width="1.5" stroke-dasharray="220" stroke-dashoffset="220" class="anim-draw"/>
+            <circle cx="60" cy="40" r="8" stroke="var(--purple-500)" stroke-width="1" opacity="0.2"/>
+            <circle cx="60" cy="40" r="8" stroke="var(--purple-400)" stroke-width="1" stroke-dasharray="50" stroke-dashoffset="50" class="anim-draw-delay1"/>
+            <circle cx="140" cy="40" r="8" stroke="var(--purple-500)" stroke-width="1" opacity="0.2"/>
+            <circle cx="140" cy="40" r="8" stroke="var(--purple-400)" stroke-width="1" stroke-dasharray="50" stroke-dashoffset="50" class="anim-draw-delay2"/>
+            <circle cx="100" cy="95" r="8" stroke="var(--purple-500)" stroke-width="1" opacity="0.2"/>
+            <circle cx="100" cy="95" r="8" stroke="var(--purple-400)" stroke-width="1" stroke-dasharray="50" stroke-dashoffset="50" class="anim-draw-delay3"/>
+            <line x1="68" y1="40" x2="92" y2="55" stroke="var(--purple-400)" stroke-width="1" stroke-dasharray="30" stroke-dashoffset="30" class="anim-draw-delay1"/>
+            <line x1="132" y1="40" x2="108" y2="55" stroke="var(--purple-400)" stroke-width="1" stroke-dasharray="30" stroke-dashoffset="30" class="anim-draw-delay2"/>
+            <line x1="100" y1="87" x2="100" y2="73" stroke="var(--purple-400)" stroke-width="1" stroke-dasharray="20" stroke-dashoffset="20" class="anim-draw-delay3"/>
+            <text x="60" y="43" text-anchor="middle" fill="var(--purple-400)" font-size="7" opacity="0.7">user</text>
+            <text x="140" y="43" text-anchor="middle" fill="var(--purple-400)" font-size="7" opacity="0.7">team</text>
+            <text x="100" y="98" text-anchor="middle" fill="var(--purple-400)" font-size="7" opacity="0.7">token</text>
+          </svg>
+        </div>
+        <p>Описание токенизируемой системы. Стейкхолдеры, модели supply и demand, ключевые вопросы к команде проекта.</p>
         <div class="service-tags">
-          <span class="service-tag">Supply models</span>
-          <span class="service-tag">Demand models</span>
-          <span class="service-tag">Simulation</span>
+          <span class="service-tag">Стейкхолдеры</span>
+          <span class="service-tag">Supply/Demand</span>
+          <span class="service-tag">Техзадание</span>
         </div>
       </div>
+
       <div class="service-card">
-        <div class="service-number">02</div>
-        <h3>Governance дизайн</h3>
-        <p>Структура голосования, кворумы, делегирование, механизмы защиты от атак</p>
+        <div class="service-header">
+          <div class="service-number">02</div>
+          <h3>Дизайн</h3>
+        </div>
+        <div class="service-illustration">
+          <svg viewBox="0 0 200 120" fill="none">
+            <rect x="30" y="20" width="50" height="30" rx="6" stroke="var(--purple-500)" stroke-width="1" opacity="0.2"/>
+            <rect x="30" y="20" width="50" height="30" rx="6" stroke="var(--purple-400)" stroke-width="1.5" stroke-dasharray="160" stroke-dashoffset="160" class="anim-draw"/>
+            <rect x="120" y="20" width="50" height="30" rx="6" stroke="var(--purple-500)" stroke-width="1" opacity="0.2"/>
+            <rect x="120" y="20" width="50" height="30" rx="6" stroke="var(--purple-400)" stroke-width="1.5" stroke-dasharray="160" stroke-dashoffset="160" class="anim-draw-delay1"/>
+            <rect x="75" y="70" width="50" height="30" rx="6" stroke="var(--purple-500)" stroke-width="1" opacity="0.2"/>
+            <rect x="75" y="70" width="50" height="30" rx="6" stroke="var(--purple-400)" stroke-width="1.5" stroke-dasharray="160" stroke-dashoffset="160" class="anim-draw-delay2"/>
+            <path d="M80 50 L95 70" stroke="var(--purple-400)" stroke-width="1" stroke-dasharray="30" stroke-dashoffset="30" class="anim-draw-delay2" marker-end="url(#arrow)"/>
+            <path d="M120 50 L105 70" stroke="var(--purple-400)" stroke-width="1" stroke-dasharray="30" stroke-dashoffset="30" class="anim-draw-delay3" marker-end="url(#arrow)"/>
+            <path d="M80 35 L120 35" stroke="var(--purple-400)" stroke-width="1" stroke-dasharray="40" stroke-dashoffset="40" class="anim-draw-delay1"/>
+            <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="var(--purple-400)"/></marker></defs>
+            <text x="55" y="38" text-anchor="middle" fill="var(--purple-400)" font-size="7" opacity="0.7">investor</text>
+            <text x="145" y="38" text-anchor="middle" fill="var(--purple-400)" font-size="7" opacity="0.7">protocol</text>
+            <text x="100" y="88" text-anchor="middle" fill="var(--purple-400)" font-size="7" opacity="0.7">treasury</text>
+          </svg>
+        </div>
+        <p>Карта стейкхолдеров, желаемое и нежелаемое поведение, потоки ценности между участниками, выравнивание стимулов.</p>
         <div class="service-tags">
-          <span class="service-tag">DAO</span>
-          <span class="service-tag">Voting</span>
-          <span class="service-tag">Multisig</span>
+          <span class="service-tag">Value flows</span>
+          <span class="service-tag">Incentive design</span>
+          <span class="service-tag">Miro/Lucidchart</span>
         </div>
       </div>
+
       <div class="service-card">
-        <div class="service-number">03</div>
-        <h3>Аудит и консалтинг</h3>
-        <p>Анализ существующей токеномики, поиск уязвимостей, рекомендации по улучшению</p>
+        <div class="service-header">
+          <div class="service-number">03</div>
+          <h3>Модель</h3>
+        </div>
+        <div class="service-illustration">
+          <svg viewBox="0 0 200 120" fill="none">
+            <polyline points="20,90 50,75 80,80 110,50 140,55 170,25" stroke="var(--purple-500)" stroke-width="1" opacity="0.2" fill="none"/>
+            <polyline points="20,90 50,75 80,80 110,50 140,55 170,25" stroke="var(--purple-400)" stroke-width="1.5" fill="none" stroke-dasharray="250" stroke-dashoffset="250" class="anim-draw"/>
+            <polyline points="20,95 50,85 80,92 110,70 140,75 170,60" stroke="var(--purple-500)" stroke-width="1" opacity="0.15" fill="none"/>
+            <polyline points="20,95 50,85 80,92 110,70 140,75 170,60" stroke="var(--purple-400)" stroke-width="1" fill="none" stroke-dasharray="250" stroke-dashoffset="250" opacity="0.5" class="anim-draw-delay1"/>
+            <line x1="20" y1="100" x2="180" y2="100" stroke="var(--purple-400)" stroke-width="0.5" opacity="0.3"/>
+            <line x1="20" y1="20" x2="20" y2="100" stroke="var(--purple-400)" stroke-width="0.5" opacity="0.3"/>
+            <circle cx="110" cy="50" r="3" fill="var(--purple-400)" opacity="0" class="anim-dot-delay2"/>
+            <circle cx="170" cy="25" r="3" fill="var(--purple-400)" opacity="0" class="anim-dot-delay3"/>
+            <text x="100" y="115" text-anchor="middle" fill="var(--text-muted)" font-size="7">time →</text>
+          </svg>
+        </div>
+        <p>Перевод дизайна в финансовую модель. Внешние и внутренние параметры, allocation, vesting, bonding curves, token release schedule.</p>
         <div class="service-tags">
-          <span class="service-tag">Audit</span>
-          <span class="service-tag">Risk analysis</span>
+          <span class="service-tag">Google Sheets</span>
+          <span class="service-tag">Allocation</span>
+          <span class="service-tag">Vesting</span>
+          <span class="service-tag">Bonding Curve</span>
         </div>
       </div>
+
       <div class="service-card">
-        <div class="service-number">04</div>
-        <h3>Обучение</h3>
-        <p>Курс токеномики, семинары, мастер-классы для команд. Контент для вашей базы знаний</p>
+        <div class="service-header">
+          <div class="service-number">04</div>
+          <h3>Симуляции</h3>
+        </div>
+        <div class="service-illustration">
+          <svg viewBox="0 0 200 120" fill="none">
+            <path d="M20,80 Q60,20 100,60 T180,40" stroke="var(--purple-500)" stroke-width="1" opacity="0.2" fill="none"/>
+            <path d="M20,80 Q60,20 100,60 T180,40" stroke="var(--purple-400)" stroke-width="1.5" fill="none" stroke-dasharray="280" stroke-dashoffset="280" class="anim-draw"/>
+            <path d="M20,85 Q55,50 100,70 T180,55" stroke="var(--purple-400)" stroke-width="1" fill="none" stroke-dasharray="250" stroke-dashoffset="250" opacity="0.4" class="anim-draw-delay1"/>
+            <path d="M20,75 Q65,10 100,50 T180,30" stroke="var(--purple-400)" stroke-width="1" fill="none" stroke-dasharray="260" stroke-dashoffset="260" opacity="0.4" class="anim-draw-delay2"/>
+            <rect x="140" y="20" width="45" height="22" rx="4" stroke="var(--purple-400)" stroke-width="0.8" opacity="0.4" fill="var(--bg-card)"/>
+            <text x="163" y="30" text-anchor="middle" fill="var(--purple-400)" font-size="6" opacity="0.6">stress</text>
+            <text x="163" y="38" text-anchor="middle" fill="var(--purple-400)" font-size="6" opacity="0.6">test</text>
+            <line x1="20" y1="100" x2="180" y2="100" stroke="var(--purple-400)" stroke-width="0.5" opacity="0.3"/>
+          </svg>
+        </div>
+        <p>Сценарный анализ: «что если пользователи уйдут на 50%?». Stress-тесты treasury, анализ чувствительности параметров.</p>
         <div class="service-tags">
-          <span class="service-tag">Course</span>
-          <span class="service-tag">Workshops</span>
+          <span class="service-tag">Scenarios</span>
+          <span class="service-tag">Stress-тесты</span>
+          <span class="service-tag">Sensitivity</span>
+        </div>
+      </div>
+
+      <div class="service-card service-card-wide">
+        <div class="service-header">
+          <div class="service-number">05</div>
+          <h3>Документы</h3>
+        </div>
+        <div class="service-illustration">
+          <svg viewBox="0 0 400 100" fill="none">
+            <rect x="10" y="15" width="60" height="70" rx="6" stroke="var(--purple-500)" stroke-width="1" opacity="0.2"/>
+            <rect x="10" y="15" width="60" height="70" rx="6" stroke="var(--purple-400)" stroke-width="1.5" stroke-dasharray="260" stroke-dashoffset="260" class="anim-draw"/>
+            <line x1="20" y1="35" x2="60" y2="35" stroke="var(--purple-400)" stroke-width="0.8" opacity="0.4"/>
+            <line x1="20" y1="45" x2="55" y2="45" stroke="var(--purple-400)" stroke-width="0.8" opacity="0.3"/>
+            <line x1="20" y1="55" x2="50" y2="55" stroke="var(--purple-400)" stroke-width="0.8" opacity="0.2"/>
+            <text x="40" y="28" text-anchor="middle" fill="var(--purple-400)" font-size="7" opacity="0.7">docs</text>
+
+            <rect x="90" y="15" width="60" height="70" rx="6" stroke="var(--purple-500)" stroke-width="1" opacity="0.2"/>
+            <rect x="90" y="15" width="60" height="70" rx="6" stroke="var(--purple-400)" stroke-width="1.5" stroke-dasharray="260" stroke-dashoffset="260" class="anim-draw-delay1"/>
+            <polyline points="100,60 115,40 130,55 140,35" stroke="var(--purple-400)" stroke-width="1" fill="none" opacity="0.5"/>
+            <text x="120" y="28" text-anchor="middle" fill="var(--purple-400)" font-size="7" opacity="0.7">model</text>
+
+            <rect x="170" y="15" width="60" height="70" rx="6" stroke="var(--purple-500)" stroke-width="1" opacity="0.2"/>
+            <rect x="170" y="15" width="60" height="70" rx="6" stroke="var(--purple-400)" stroke-width="1.5" stroke-dasharray="260" stroke-dashoffset="260" class="anim-draw-delay2"/>
+            <circle cx="200" cy="55" r="15" stroke="var(--purple-400)" stroke-width="0.8" opacity="0.4" fill="none"/>
+            <path d="M192,55 L198,62 L210,48" stroke="var(--purple-400)" stroke-width="1" opacity="0.5"/>
+            <text x="200" y="28" text-anchor="middle" fill="var(--purple-400)" font-size="7" opacity="0.7">schema</text>
+
+            <rect x="250" y="15" width="60" height="70" rx="6" stroke="var(--purple-500)" stroke-width="1" opacity="0.2"/>
+            <rect x="250" y="15" width="60" height="70" rx="6" stroke="var(--purple-400)" stroke-width="1.5" stroke-dasharray="260" stroke-dashoffset="260" class="anim-draw-delay3"/>
+            <polygon points="280,40 295,55 280,70 265,55" stroke="var(--purple-400)" stroke-width="0.8" opacity="0.4" fill="none"/>
+            <text x="280" y="28" text-anchor="middle" fill="var(--purple-400)" font-size="7" opacity="0.7">slides</text>
+
+            <rect x="330" y="15" width="60" height="70" rx="6" stroke="var(--purple-500)" stroke-width="1" opacity="0.2"/>
+            <rect x="330" y="15" width="60" height="70" rx="6" stroke="var(--purple-400)" stroke-width="1.5" stroke-dasharray="260" stroke-dashoffset="260" class="anim-draw-delay3"/>
+            <rect x="345" y="45" width="30" height="20" rx="3" stroke="var(--purple-400)" stroke-width="0.8" opacity="0.4" fill="none"/>
+            <path d="M355,55 L365,48" stroke="var(--purple-400)" stroke-width="0.8" opacity="0.4"/>
+            <text x="360" y="28" text-anchor="middle" fill="var(--purple-400)" font-size="7" opacity="0.7">dashboard</text>
+          </svg>
+        </div>
+        <p>Whitepaper, описание концепта, схемы токеномики, финансовые модели, презентации для инвесторов, статьи для комьюнити, дашборды.</p>
+        <div class="service-tags">
+          <span class="service-tag">Whitepaper</span>
+          <span class="service-tag">Презентация</span>
+          <span class="service-tag">Дашборд</span>
+          <span class="service-tag">Комьюнити</span>
         </div>
       </div>
     </div>

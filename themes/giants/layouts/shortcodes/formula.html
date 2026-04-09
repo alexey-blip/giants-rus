@@ -1,4 +1,4 @@
 <div class="formula">
-  <div class="math">{{ .Get "math" | default (.Inner | plainify) }}</div>
+  <div class="math">{{ .Get "math" }}</div>
   {{ with .Get "desc" }}<div class="desc">{{ . }}</div>{{ end }}
 </div>

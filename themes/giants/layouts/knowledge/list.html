@@ -1,0 +1,33 @@
+{{ define "main" }}
+<div class="page-full">
+  <div class="section-header">
+    <h1>{{ .Title }}</h1>
+    <p>Все обучающие статьи по токеномике — от основ до продвинутых моделей</p>
+  </div>
+
+  {{ $titles := dict "basics" "Основы токеномики" "models" "Модели и инструменты" "governance" "Governance и DAO" "validators" "Экономика валидаторов" }}
+  {{ $descs := dict "basics" "Что такое токеномика, как устроен процесс проектирования" "models" "Модели предложения, спроса, AMM, bonding curves, агентное моделирование" "governance" "Механизмы голосования, делегирование, атаки на governance" "validators" "Стейкинг, slashing, награды валидаторов" }}
+
+  {{ $keys := slice "basics" "models" "governance" "validators" }}
+  {{ range $key := $keys }}
+    {{ $sec := site.GetPage (printf "/%s" $key) }}
+    {{ with $sec }}
+      {{ $pages := .RegularPages }}
+      {{ if $pages }}
+      <div class="knowledge-section">
+        <h2>{{ index $titles $key }}</h2>
+        <p class="knowledge-section-desc">{{ index $descs $key }}</p>
+        <div class="article-list">
+          {{ range $pages.ByWeight }}
+          <a href="{{ .Permalink }}" class="article-card">
+            <h3>{{ .Title }}</h3>
+            {{ with .Description }}<p>{{ . }}</p>{{ end }}
+          </a>
+          {{ end }}
+        </div>
+      </div>
+      {{ end }}
+    {{ end }}
+  {{ end }}
+</div>
+{{ end }}
