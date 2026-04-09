@@ -1,0 +1,42 @@
+# Гиганты — Лаборатория Токеномики
+
+> Крупнейшая русскоязычная база знаний по токеномике. Проектирование, моделирование и аудит токеномик для Web3-проектов.
+
+## О проекте
+
+Гиганты — команда, которая проектирует токеномику для криптопроектов: от концепции до финансовых моделей и симуляций. Сайт содержит образовательные материалы, модели и кейсы.
+
+## Разделы сайта
+
+- База знаний: https://tokenomika.pro/knowledge/
+- Кейсы: https://tokenomika.pro/cases/
+- О нас: https://tokenomika.pro/about/
+
+## Основы токеномики
+
+- Что такое токеномика: https://tokenomika.pro/basics/what-is-tokenomics/
+- Процесс проектирования токеномики: https://tokenomika.pro/basics/tokenomics-process/
+
+## Модели и инструменты
+
+- Аллокация токенов: https://tokenomika.pro/models/allocation/
+- Модели предложения токенов: https://tokenomika.pro/models/token-supply-models/
+- Bonding Curves: https://tokenomika.pro/models/bonding-curve/
+- AMM (автоматические маркетмейкеры): https://tokenomika.pro/models/amm/
+- Модели полезности токена: https://tokenomika.pro/models/utility-models/
+- Агентное моделирование: https://tokenomika.pro/models/agent-based-modeling/
+
+## Ключевые темы
+
+- Дизайн токеномики (token design)
+- Финансовое моделирование и симуляции
+- Аллокация и вестинг токенов
+- Bonding curves и ценовые механизмы
+- AMM и пулы ликвидности
+- Governance и управление DAO
+- Агентное моделирование (ABM)
+
+## Контакты
+
+- Telegram: https://t.me/giants_tokenomics
+- YouTube: https://www.youtube.com/playlist?list=PLeLfGV5qnQybhgDjklLf39CJnD2aro7la
