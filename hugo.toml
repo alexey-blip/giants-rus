@@ -34,7 +34,7 @@ enableRobotsTXT = true
   ctaOrder = "https://tokenomika.pro/order/"
   telegram = "https://t.me/giants_tokenomics"
   youtube = "https://www.youtube.com/playlist?list=PLeLfGV5qnQybhgDjklLf39CJnD2aro7la"
-  github = "https://github.com/giantstokenomics"
+
 
 [taxonomies]
   tag = "tags"
