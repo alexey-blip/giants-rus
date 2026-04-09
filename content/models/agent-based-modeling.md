@@ -211,3 +211,10 @@ for day in range(num_steps):
 3+ пунктов — агентная модель окупит вложения. 0–1 — начните с [табличной модели](/models/token-supply-models/).
 
 {{< cta title="Нужна агентная модель для вашего проекта?" text="Мы проектируем токеномику и проверяем её симуляциями — от табличных моделей до агентного моделирования" button="Обсудить проект" link="https://t.me/karanyuk" >}}
+
+## Читайте также
+
+- [Симуляции в токеномике]({{< relref "simulations" >}}) — 4 уровня: sensitivity analysis, сценарии, Monte Carlo, ABM
+- [5 моделей предложения токенов]({{< relref "token-supply-models" >}}) — allocation, bonding curve, airdrop, reward, market
+- [AMM и пулы ликвидности]({{< relref "amm" >}}) — механизмы с обратной связью, которые часто моделируются агентами
+- [Bonding Curve]({{< relref "bonding-curve" >}}) — ещё один механизм, где агентное моделирование особенно полезно
