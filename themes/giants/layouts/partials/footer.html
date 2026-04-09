@@ -1,0 +1,30 @@
+<footer class="footer">
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-left">
+        <a href="/" class="logo">
+          <img class="logo-img logo-img--dark" src="/images/logo-black.png" alt="Гиганты" height="22">
+          <img class="logo-img logo-img--light" src="/images/logo-white.png" alt="Гиганты" height="22">
+        </a>
+      </div>
+
+      <nav class="footer-nav">
+        {{ range .Site.Menus.main }}
+          {{ if lt .Weight 100 }}
+          <a href="{{ .URL }}">{{ .Name }}</a>
+          {{ end }}
+        {{ end }}
+      </nav>
+
+      <div class="footer-social">
+        {{ with .Site.Params.telegram }}<a href="{{ . }}" target="_blank" rel="noopener" title="Telegram">TG</a>{{ end }}
+        {{ with .Site.Params.youtube }}<a href="{{ . }}" target="_blank" rel="noopener" title="YouTube">YT</a>{{ end }}
+        {{ with .Site.Params.github }}<a href="{{ . }}" target="_blank" rel="noopener" title="GitHub">GH</a>{{ end }}
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span class="footer-copy">&copy; {{ now.Year }} {{ .Site.Title }}. {{ .Site.Params.author }}.</span>
+    </div>
+  </div>
+</footer>

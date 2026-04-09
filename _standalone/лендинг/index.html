@@ -1,0 +1,1777 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Гиганты — Лаборатория Токеномики</title>
+  <meta name="description" content="Разработка моделей токеномики для блокчейн-проектов. От концепции до симуляции. 30+ проектов, МФТИ, Web2 + Web3.">
+  <meta property="og:title" content="Гиганты — Лаборатория Токеномики">
+  <meta property="og:description" content="Проектируем устойчивую экономику токенов для DeFi и Web3 проектов">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://gnts.io">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    /* ====== RESET & BASE ====== */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg-deep: #0b0a14;
+      --bg-primary: #110f1f;
+      --bg-card: #1a1535;
+      --bg-card-hover: #221c4a;
+      --border: rgba(139, 92, 246, 0.18);
+      --border-hover: rgba(139, 92, 246, 0.35);
+      --text-primary: #f5f5fa;
+      --text-secondary: #b8b3d0;
+      --text-muted: #7d78a0;
+      --purple-400: #c084fc;
+      --purple-500: #a855f7;
+      --purple-600: #9333ea;
+      --purple-700: #7c3aed;
+      --purple-800: #6d28d9;
+      --purple-900: #4c1d95;
+      --glow: rgba(139, 92, 246, 0.25);
+      --glow-strong: rgba(139, 92, 246, 0.5);
+      --font-heading: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --max-width: 1200px;
+    }
+
+    html { font-size: 16px; scroll-behavior: smooth; scroll-padding-top: 80px; }
+
+    body {
+      background: var(--bg-deep);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    .container {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    h1, h2, h3, h4 { font-family: var(--font-heading); line-height: 1.2; }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* ====== HEADER ====== */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      padding: 0 24px;
+      background: rgba(7, 6, 14, 0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      transition: background 0.3s;
+    }
+
+    .header-inner {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 72px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+    }
+
+    .logo-text {
+      font-family: var(--font-heading);
+      font-weight: 800;
+      font-size: 1.3rem;
+      letter-spacing: 0.06em;
+      color: var(--text-primary);
+    }
+
+    .nav { display: flex; align-items: center; gap: 32px; }
+
+    .nav a {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      transition: color 0.2s;
+    }
+
+    .nav a:hover { color: var(--text-primary); }
+
+    .header-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--purple-700);
+      color: #fff;
+      font-family: var(--font-heading);
+      font-weight: 600;
+      font-size: 0.85rem;
+      padding: 10px 24px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.25s;
+      text-decoration: none;
+    }
+
+    .header-cta:hover {
+      background: var(--purple-600);
+      box-shadow: 0 0 30px var(--glow);
+    }
+
+    .burger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+      background: none;
+      border: none;
+    }
+
+    .burger span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--text-primary);
+      border-radius: 2px;
+      transition: all 0.3s;
+    }
+
+    .burger.open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+    .burger.open span:nth-child(2) { opacity: 0; }
+    .burger.open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+    /* ====== HERO ====== */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 120px 0 80px;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 70% 40%, rgba(124, 58, 237, 0.15) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 50% at 20% 80%, rgba(168, 85, 247, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse 40% 40% at 80% 90%, rgba(99, 102, 241, 0.06) 0%, transparent 40%);
+      pointer-events: none;
+    }
+
+    /* Animated gradient blobs */
+    .hero-blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+      will-change: transform;
+    }
+
+    .hero-blob-1 {
+      width: 500px;
+      height: 500px;
+      right: -5%;
+      top: 10%;
+      background: rgba(124, 58, 237, 0.15);
+      animation: blob1 12s ease-in-out infinite;
+    }
+
+    .hero-blob-2 {
+      width: 350px;
+      height: 350px;
+      left: 10%;
+      bottom: 5%;
+      background: rgba(168, 85, 247, 0.1);
+      animation: blob2 15s ease-in-out infinite;
+    }
+
+    .hero-blob-3 {
+      width: 250px;
+      height: 250px;
+      right: 25%;
+      bottom: 20%;
+      background: rgba(99, 102, 241, 0.12);
+      animation: blob3 10s ease-in-out infinite;
+    }
+
+    @keyframes blob1 {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      25% { transform: translate(-40px, 30px) scale(1.1); }
+      50% { transform: translate(-20px, -40px) scale(0.95); }
+      75% { transform: translate(30px, 20px) scale(1.05); }
+    }
+
+    @keyframes blob2 {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(50px, -30px) scale(1.08); }
+      66% { transform: translate(-30px, 40px) scale(0.92); }
+    }
+
+    @keyframes blob3 {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      25% { transform: translate(30px, 40px) scale(1.15); }
+      50% { transform: translate(-40px, -20px) scale(0.9); }
+      75% { transform: translate(20px, -30px) scale(1.05); }
+    }
+
+    #particles-canvas {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 680px;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(124, 58, 237, 0.1);
+      border: 1px solid rgba(124, 58, 237, 0.2);
+      border-radius: 100px;
+      padding: 6px 16px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--purple-400);
+      margin-bottom: 24px;
+    }
+
+    .hero-badge::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: var(--purple-500);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .hero h1 {
+      font-size: clamp(2.2rem, 5vw, 3.5rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 .accent {
+      background: linear-gradient(135deg, var(--purple-400), var(--purple-600));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-subtitle {
+      font-size: 1.15rem;
+      color: var(--text-secondary);
+      max-width: 540px;
+      margin-bottom: 36px;
+      line-height: 1.7;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 60px;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, var(--purple-700), var(--purple-600));
+      color: #fff;
+      font-family: var(--font-heading);
+      font-weight: 600;
+      font-size: 0.95rem;
+      padding: 14px 32px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-decoration: none;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 40px var(--glow-strong);
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      color: var(--purple-400);
+      font-family: var(--font-heading);
+      font-weight: 600;
+      font-size: 0.95rem;
+      padding: 14px 32px;
+      border-radius: 12px;
+      border: 1px solid var(--border-hover);
+      cursor: pointer;
+      transition: all 0.3s;
+      text-decoration: none;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(124, 58, 237, 0.08);
+      border-color: var(--purple-500);
+      transform: translateY(-2px);
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 48px;
+      flex-wrap: wrap;
+    }
+
+    .hero-stat {
+      text-align: left;
+    }
+
+    .hero-stat .number {
+      font-family: var(--font-heading);
+      font-size: 1.8rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--purple-400), var(--text-primary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-stat .label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* ====== SECTION COMMON ====== */
+    .section {
+      padding: 100px 0;
+      position: relative;
+    }
+
+    .section-label {
+      font-family: var(--font-heading);
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--purple-500);
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+    }
+
+    .section-subtitle {
+      font-size: 1.05rem;
+      color: var(--text-secondary);
+      max-width: 600px;
+      line-height: 1.7;
+    }
+
+    /* ====== PROBLEM SECTION ====== */
+    .problem {
+      background: var(--bg-primary);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .problem-header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .problem-header .section-subtitle {
+      margin: 0 auto;
+    }
+
+    .problem-stat {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .problem-stat .big-number {
+      font-family: var(--font-heading);
+      font-size: 4rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, #ef4444, #f97316);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1;
+    }
+
+    .problem-stat .big-label {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      max-width: 300px;
+      line-height: 1.4;
+    }
+
+    .problem-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-bottom: 48px;
+    }
+
+    .problem-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px 28px;
+      transition: all 0.3s;
+    }
+
+    .problem-card:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-4px);
+    }
+
+    .problem-card-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      background: rgba(239, 68, 68, 0.15);
+      color: #ef4444;
+    }
+
+    .problem-card h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .problem-card p {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .problem-conclusion {
+      text-align: center;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 32px;
+      background: rgba(124, 58, 237, 0.05);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+    }
+
+    /* ====== SERVICES ====== */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+      margin-top: 48px;
+    }
+
+    .service-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 36px 32px;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .service-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--purple-700), var(--purple-500));
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .service-card:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-4px);
+    }
+
+    .service-card:hover::before { opacity: 1; }
+
+    .service-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 8px;
+    }
+
+    .service-number {
+      font-family: var(--font-heading);
+      font-size: 2rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--purple-700), var(--purple-500));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      opacity: 0.5;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .service-card h3 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin: 0;
+    }
+
+    .service-illustration {
+      height: 120px;
+      margin: 12px 0 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .service-illustration svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .service-card-wide {
+      grid-column: 1 / -1;
+    }
+
+    .service-card-wide .service-illustration {
+      height: 100px;
+    }
+
+    /* SVG draw-on animations */
+    @keyframes draw-line {
+      to { stroke-dashoffset: 0; }
+    }
+
+    @keyframes dot-appear {
+      to { opacity: 0.8; }
+    }
+
+    .anim-draw { animation: draw-line 2s ease-out forwards; }
+    .anim-draw-delay1 { animation: draw-line 2s 0.3s ease-out forwards; }
+    .anim-draw-delay2 { animation: draw-line 2s 0.6s ease-out forwards; }
+    .anim-draw-delay3 { animation: draw-line 2s 0.9s ease-out forwards; }
+    .anim-dot-delay2 { animation: dot-appear 0.5s 1.5s ease-out forwards; }
+    .anim-dot-delay3 { animation: dot-appear 0.5s 2s ease-out forwards; }
+
+    .service-card p {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    .service-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .service-tag {
+      font-size: 0.75rem;
+      font-weight: 500;
+      padding: 4px 12px;
+      border-radius: 100px;
+      background: rgba(124, 58, 237, 0.08);
+      color: var(--purple-400);
+      border: 1px solid rgba(124, 58, 237, 0.15);
+    }
+
+    /* ====== WHY US ====== */
+    .why-us {
+      background: var(--bg-primary);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .why-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+      margin-top: 48px;
+    }
+
+    .why-card {
+      text-align: center;
+      padding: 40px 24px;
+    }
+
+    .why-icon {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 24px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      background: rgba(124, 58, 237, 0.1);
+      border: 1px solid var(--border);
+    }
+
+    .why-card h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .why-card p {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    /* ====== CASES ====== */
+    .cases-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+      margin-top: 48px;
+    }
+
+    .case-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      transition: all 0.3s;
+    }
+
+    .case-card:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-4px);
+    }
+
+    .case-type {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--purple-400);
+      margin-bottom: 12px;
+    }
+
+    .case-card h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .case-card p {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    .case-mechanics {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .case-mechanic {
+      font-size: 0.7rem;
+      font-weight: 500;
+      padding: 3px 10px;
+      border-radius: 6px;
+      background: rgba(124, 58, 237, 0.06);
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+    }
+
+    /* ====== TEAM ====== */
+    .team {
+      background: var(--bg-primary);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* ====== CTA BLOCK ====== */
+    .cta-section {
+      padding: 100px 0;
+    }
+
+    .cta-block {
+      background:
+        linear-gradient(135deg, rgba(124, 58, 237, 0.15) 0%, rgba(76, 29, 149, 0.08) 100%);
+      border: 1px solid var(--border-hover);
+      border-radius: 24px;
+      padding: 80px 60px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-block::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(ellipse at center, rgba(124, 58, 237, 0.05) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    .cta-block h2 {
+      font-size: clamp(1.8rem, 3vw, 2.5rem);
+      font-weight: 800;
+      margin-bottom: 16px;
+      position: relative;
+    }
+
+    .cta-block .section-subtitle {
+      margin: 0 auto 40px;
+      text-align: center;
+    }
+
+    .cta-actions {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 32px;
+      position: relative;
+    }
+
+    .cta-contacts {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      position: relative;
+    }
+
+    .cta-contacts a {
+      color: var(--text-secondary);
+      transition: color 0.2s;
+    }
+
+    .cta-contacts a:hover {
+      color: var(--purple-400);
+    }
+
+    /* ====== FOOTER ====== */
+    .footer {
+      border-top: 1px solid var(--border);
+      padding: 48px 0;
+      background: var(--bg-deep);
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 24px;
+    }
+
+    .footer-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .footer-nav {
+      display: flex;
+      gap: 24px;
+    }
+
+    .footer-nav a {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      transition: color 0.2s;
+    }
+
+    .footer-nav a:hover { color: var(--text-secondary); }
+
+    .footer-social {
+      display: flex;
+      gap: 16px;
+    }
+
+    .footer-social a {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .footer-social a:hover {
+      border-color: var(--border-hover);
+      color: var(--purple-400);
+    }
+
+    .footer-bottom {
+      margin-top: 32px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .footer-copy {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    /* ====== MOBILE NAV OVERLAY ====== */
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(7, 6, 14, 0.95);
+      backdrop-filter: blur(20px);
+      z-index: 999;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 32px;
+    }
+
+    .mobile-nav.open { display: flex; }
+
+    .mobile-nav a {
+      font-family: var(--font-heading);
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      transition: color 0.2s;
+    }
+
+    .mobile-nav a:hover { color: var(--purple-400); }
+
+    /* ====== RESPONSIVE ====== */
+    @media (max-width: 1024px) {
+      .hero-planet { width: 400px; height: 400px; right: -10%; }
+      .problem-cards { grid-template-columns: 1fr; }
+      .services-grid { grid-template-columns: 1fr; }
+      .why-grid { grid-template-columns: 1fr; }
+      .cases-grid { grid-template-columns: 1fr; }
+      .interview-card { flex: 0 0 calc(50% - 8px); }
+    }
+
+    @media (max-width: 768px) {
+      .nav { display: none; }
+      .header-cta { display: none; }
+      .burger { display: flex; }
+
+      .hero { min-height: auto; padding: 120px 0 60px; }
+      .hero-blob { display: none; }
+      .hero-stats { gap: 24px; }
+      .hero-stat .number { font-size: 1.4rem; }
+
+      .section { padding: 60px 0; }
+
+      .problem-stat { flex-direction: column; text-align: center; }
+      .problem-stat .big-number { font-size: 3rem; }
+
+      .interview-card { flex: 0 0 calc(80% - 8px); }
+      .cta-block { padding: 48px 24px; }
+
+      .footer-inner { flex-direction: column; text-align: center; }
+      .footer-nav { flex-wrap: wrap; justify-content: center; }
+      .footer-social { justify-content: center; }
+      .footer-bottom { flex-direction: column; text-align: center; }
+    }
+
+    /* ====== INTERVIEWS CAROUSEL ====== */
+    .interviews-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 28px;
+    }
+
+    .interviews-header .section-title { margin-bottom: 0; }
+
+    .carousel-controls {
+      display: flex;
+      gap: 8px;
+    }
+
+    .carousel-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text-secondary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .carousel-btn:hover {
+      border-color: var(--border-hover);
+      color: var(--purple-400);
+      background: var(--bg-card-hover);
+    }
+
+    .carousel-track-wrapper {
+      overflow: hidden;
+    }
+
+    .carousel-track {
+      display: flex;
+      gap: 16px;
+      transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .interview-card {
+      flex: 0 0 calc(33.333% - 11px);
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      transition: all 0.3s;
+      text-decoration: none;
+    }
+
+    .interview-card:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 30px rgba(124, 58, 237, 0.1);
+    }
+
+    .interview-thumb {
+      position: relative;
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      background: var(--bg-primary);
+    }
+
+    .interview-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.3s;
+    }
+
+    .interview-card:hover .interview-thumb img {
+      transform: scale(1.05);
+    }
+
+    .interview-play {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.25s;
+      background: rgba(0, 0, 0, 0.25);
+    }
+
+    .interview-card:hover .interview-play {
+      opacity: 1;
+    }
+
+    .interview-info {
+      padding: 12px 16px;
+    }
+
+    .interview-info h3 {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 2px;
+      line-height: 1.3;
+    }
+
+    .interview-channel {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    /* ====== ROTATING ORBITS ====== */
+    .hero-orbit {
+      position: absolute;
+      top: 10%;
+      right: -20%;
+      width: 120%;
+      height: 80%;
+      border: 1px solid rgba(124, 58, 237, 0.06);
+      border-radius: 50%;
+      pointer-events: none;
+      animation: orbit-spin 60s linear infinite;
+    }
+
+    .hero-orbit-2 {
+      position: absolute;
+      bottom: 5%;
+      left: -10%;
+      width: 80%;
+      height: 100%;
+      border: 1px solid rgba(168, 85, 247, 0.05);
+      border-radius: 50%;
+      pointer-events: none;
+      animation: orbit-spin 45s linear infinite reverse;
+    }
+
+    @keyframes orbit-spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header" id="header">
+    <div class="header-inner">
+      <a href="#" class="logo">
+        <img src="../assets/logo/Гиганты_w1.png" alt="Гиганты" class="logo-icon" style="height: 36px; width: auto;">
+      </a>
+
+      <nav class="nav">
+        <a href="#services">Услуги</a>
+        <a href="#approach">Подход</a>
+        <a href="#cases">Кейсы</a>
+        <a href="#interviews">Медиа</a>
+        <a href="#contact">Контакты</a>
+      </nav>
+
+      <a href="#contact" class="header-cta">Заказать токеномику</a>
+
+      <button class="burger" id="burger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- MOBILE NAV -->
+  <div class="mobile-nav" id="mobile-nav">
+    <a href="#services" onclick="closeMobile()">Услуги</a>
+    <a href="#approach" onclick="closeMobile()">Подход</a>
+    <a href="#cases" onclick="closeMobile()">Кейсы</a>
+    <a href="#interviews" onclick="closeMobile()">Медиа</a>
+    <a href="#contact" onclick="closeMobile()">Контакты</a>
+    <a href="#contact" class="btn-primary" onclick="closeMobile()">Заказать токеномику</a>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="hero-orbit"></div>
+    <div class="hero-orbit-2"></div>
+    <div class="hero-blob hero-blob-1"></div>
+    <div class="hero-blob hero-blob-2"></div>
+    <div class="hero-blob hero-blob-3"></div>
+    <canvas id="particles-canvas"></canvas>
+
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-badge">Гиганты — Лаборатория Токеномики</div>
+
+        <h1>Разработка моделей<br><span class="accent">токеномики</span><br>для блокчейн-проектов</h1>
+
+        <p class="hero-subtitle">Проектируем устойчивую экономику токенов: от концепции и дизайна экосистемы до моделирования и симуляции</p>
+
+        <div class="hero-actions">
+          <a href="#contact" class="btn-primary">
+            Заказать токеномику
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <a href="https://t.me/karanyuk" class="btn-secondary" target="_blank" rel="noopener">
+            Забронировать консультацию
+          </a>
+        </div>
+
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <div class="number">30+</div>
+            <div class="label">проектов</div>
+          </div>
+          <div class="hero-stat">
+            <div class="number">5+</div>
+            <div class="label">лет в индустрии</div>
+          </div>
+          <div class="hero-stat">
+            <div class="number">МФТИ</div>
+            <div class="label">курс токеномики</div>
+          </div>
+          <div class="hero-stat">
+            <div class="number">Web2+3</div>
+            <div class="label">финмоделирование</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROBLEM -->
+  <section class="section problem" id="problem">
+    <div class="container">
+      <div class="problem-header">
+        <div class="section-label">Зачем нужна токеномика</div>
+        <div class="problem-stat">
+          <span class="big-number">75%</span>
+          <span class="big-label">криптопроектов закрываются в первый год из-за ошибок в экономике токена</span>
+        </div>
+      </div>
+
+      <div class="problem-cards">
+        <div class="problem-card">
+          <div class="problem-card-icon">&#9888;</div>
+          <h3>Неясная утилити токена</h3>
+          <p>Без чёткой ценности для держателей спрос падает, а цена следует за ним. Токен становится инструментом спекуляции, а не экосистемы.</p>
+        </div>
+        <div class="problem-card">
+          <div class="problem-card-icon">&#9888;</div>
+          <h3>Неустойчивая экономика</h3>
+          <p>Избыточная эмиссия, неправильный вестинг и инфляционные спирали приводят к потере доверия инвесторов и комьюнити.</p>
+        </div>
+        <div class="problem-card">
+          <div class="problem-card-icon">&#9888;</div>
+          <h3>Отсутствие выручки</h3>
+          <p>Без product-market fit и понятных источников дохода проект не может финансировать развитие и обеспечивать ценность токена.</p>
+        </div>
+      </div>
+
+      <div class="problem-conclusion">
+        Проектам, претендующим на успех, требуется грамотная токеномика, балансирующая интересы всех участников экосистемы
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES — 5 stages from MFTI lecture -->
+  <section class="section" id="services">
+    <div class="container">
+      <div class="section-label">Процесс</div>
+      <h2 class="section-title">Полный цикл разработки токеномики</h2>
+      <p class="section-subtitle">5 этапов — от первого звонка до готовой модели с симуляциями. Методология курса МФТИ, проверена на 30+ проектах.</p>
+
+      <div class="services-grid">
+        <div class="service-card">
+          <div class="service-header">
+            <div class="service-number">01</div>
+            <h3>Концепт</h3>
+          </div>
+          <div class="service-illustration">
+            <svg viewBox="0 0 200 120" fill="none">
+              <circle cx="100" cy="60" r="35" stroke="var(--purple-500)" stroke-width="1" opacity="0.3"/>
+              <circle cx="100" cy="60" r="35" stroke="var(--purple-400)" stroke-width="1.5" stroke-dasharray="220" stroke-dashoffset="220" class="anim-draw"/>
+              <circle cx="60" cy="40" r="8" stroke="var(--purple-500)" stroke-width="1" opacity="0.2"/>
+              <circle cx="60" cy="40" r="8" stroke="var(--purple-400)" stroke-width="1" stroke-dasharray="50" stroke-dashoffset="50" class="anim-draw-delay1"/>
+              <circle cx="140" cy="40" r="8" stroke="var(--purple-500)" stroke-width="1" opacity="0.2"/>
+              <circle cx="140" cy="40" r="8" stroke="var(--purple-400)" stroke-width="1" stroke-dasharray="50" stroke-dashoffset="50" class="anim-draw-delay2"/>
+              <circle cx="100" cy="95" r="8" stroke="var(--purple-500)" stroke-width="1" opacity="0.2"/>
+              <circle cx="100" cy="95" r="8" stroke="var(--purple-400)" stroke-width="1" stroke-dasharray="50" stroke-dashoffset="50" class="anim-draw-delay3"/>
+              <line x1="68" y1="40" x2="92" y2="55" stroke="var(--purple-400)" stroke-width="1" stroke-dasharray="30" stroke-dashoffset="30" class="anim-draw-delay1"/>
+              <line x1="132" y1="40" x2="108" y2="55" stroke="var(--purple-400)" stroke-width="1" stroke-dasharray="30" stroke-dashoffset="30" class="anim-draw-delay2"/>
+              <line x1="100" y1="87" x2="100" y2="73" stroke="var(--purple-400)" stroke-width="1" stroke-dasharray="20" stroke-dashoffset="20" class="anim-draw-delay3"/>
+              <text x="60" y="43" text-anchor="middle" fill="var(--purple-400)" font-size="7" opacity="0.7">user</text>
+              <text x="140" y="43" text-anchor="middle" fill="var(--purple-400)" font-size="7" opacity="0.7">team</text>
+              <text x="100" y="98" text-anchor="middle" fill="var(--purple-400)" font-size="7" opacity="0.7">token</text>
+            </svg>
+          </div>
+          <p>Описание токенизируемой системы. Стейкхолдеры, модели supply и demand, ключевые вопросы к команде проекта.</p>
+          <div class="service-tags">
+            <span class="service-tag">Стейкхолдеры</span>
+            <span class="service-tag">Supply/Demand</span>
+            <span class="service-tag">Техзадание</span>
+          </div>
+        </div>
+
+        <div class="service-card">
+          <div class="service-header">
+            <div class="service-number">02</div>
+            <h3>Дизайн</h3>
+          </div>
+          <div class="service-illustration">
+            <svg viewBox="0 0 200 120" fill="none">
+              <rect x="30" y="20" width="50" height="30" rx="6" stroke="var(--purple-500)" stroke-width="1" opacity="0.2"/>
+              <rect x="30" y="20" width="50" height="30" rx="6" stroke="var(--purple-400)" stroke-width="1.5" stroke-dasharray="160" stroke-dashoffset="160" class="anim-draw"/>
+              <rect x="120" y="20" width="50" height="30" rx="6" stroke="var(--purple-500)" stroke-width="1" opacity="0.2"/>
+              <rect x="120" y="20" width="50" height="30" rx="6" stroke="var(--purple-400)" stroke-width="1.5" stroke-dasharray="160" stroke-dashoffset="160" class="anim-draw-delay1"/>
+              <rect x="75" y="70" width="50" height="30" rx="6" stroke="var(--purple-500)" stroke-width="1" opacity="0.2"/>
+              <rect x="75" y="70" width="50" height="30" rx="6" stroke="var(--purple-400)" stroke-width="1.5" stroke-dasharray="160" stroke-dashoffset="160" class="anim-draw-delay2"/>
+              <path d="M80 50 L95 70" stroke="var(--purple-400)" stroke-width="1" stroke-dasharray="30" stroke-dashoffset="30" class="anim-draw-delay2" marker-end="url(#arrow)"/>
+              <path d="M120 50 L105 70" stroke="var(--purple-400)" stroke-width="1" stroke-dasharray="30" stroke-dashoffset="30" class="anim-draw-delay3" marker-end="url(#arrow)"/>
+              <path d="M80 35 L120 35" stroke="var(--purple-400)" stroke-width="1" stroke-dasharray="40" stroke-dashoffset="40" class="anim-draw-delay1"/>
+              <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="var(--purple-400)"/></marker></defs>
+              <text x="55" y="38" text-anchor="middle" fill="var(--purple-400)" font-size="7" opacity="0.7">investor</text>
+              <text x="145" y="38" text-anchor="middle" fill="var(--purple-400)" font-size="7" opacity="0.7">protocol</text>
+              <text x="100" y="88" text-anchor="middle" fill="var(--purple-400)" font-size="7" opacity="0.7">treasury</text>
+            </svg>
+          </div>
+          <p>Карта стейкхолдеров, желаемое и нежелаемое поведение, потоки ценности между участниками, выравнивание стимулов.</p>
+          <div class="service-tags">
+            <span class="service-tag">Value flows</span>
+            <span class="service-tag">Incentive design</span>
+            <span class="service-tag">Miro/Lucidchart</span>
+          </div>
+        </div>
+
+        <div class="service-card">
+          <div class="service-header">
+            <div class="service-number">03</div>
+            <h3>Модель</h3>
+          </div>
+          <div class="service-illustration">
+            <svg viewBox="0 0 200 120" fill="none">
+              <polyline points="20,90 50,75 80,80 110,50 140,55 170,25" stroke="var(--purple-500)" stroke-width="1" opacity="0.2" fill="none"/>
+              <polyline points="20,90 50,75 80,80 110,50 140,55 170,25" stroke="var(--purple-400)" stroke-width="1.5" fill="none" stroke-dasharray="250" stroke-dashoffset="250" class="anim-draw"/>
+              <polyline points="20,95 50,85 80,92 110,70 140,75 170,60" stroke="var(--purple-500)" stroke-width="1" opacity="0.15" fill="none"/>
+              <polyline points="20,95 50,85 80,92 110,70 140,75 170,60" stroke="var(--purple-400)" stroke-width="1" fill="none" stroke-dasharray="250" stroke-dashoffset="250" opacity="0.5" class="anim-draw-delay1"/>
+              <line x1="20" y1="100" x2="180" y2="100" stroke="var(--purple-400)" stroke-width="0.5" opacity="0.3"/>
+              <line x1="20" y1="20" x2="20" y2="100" stroke="var(--purple-400)" stroke-width="0.5" opacity="0.3"/>
+              <circle cx="110" cy="50" r="3" fill="var(--purple-400)" opacity="0" class="anim-dot-delay2"/>
+              <circle cx="170" cy="25" r="3" fill="var(--purple-400)" opacity="0" class="anim-dot-delay3"/>
+              <text x="100" y="115" text-anchor="middle" fill="var(--text-muted)" font-size="7">time →</text>
+            </svg>
+          </div>
+          <p>Перевод дизайна в финансовую модель. Внешние и внутренние параметры, allocation, vesting, bonding curves, token release schedule.</p>
+          <div class="service-tags">
+            <span class="service-tag">Google Sheets</span>
+            <span class="service-tag">Allocation</span>
+            <span class="service-tag">Vesting</span>
+            <span class="service-tag">Bonding Curve</span>
+          </div>
+        </div>
+
+        <div class="service-card">
+          <div class="service-header">
+            <div class="service-number">04</div>
+            <h3>Симуляции</h3>
+          </div>
+          <div class="service-illustration">
+            <svg viewBox="0 0 200 120" fill="none">
+              <path d="M20,80 Q60,20 100,60 T180,40" stroke="var(--purple-500)" stroke-width="1" opacity="0.2" fill="none"/>
+              <path d="M20,80 Q60,20 100,60 T180,40" stroke="var(--purple-400)" stroke-width="1.5" fill="none" stroke-dasharray="280" stroke-dashoffset="280" class="anim-draw"/>
+              <path d="M20,85 Q55,50 100,70 T180,55" stroke="var(--purple-400)" stroke-width="1" fill="none" stroke-dasharray="250" stroke-dashoffset="250" opacity="0.4" class="anim-draw-delay1"/>
+              <path d="M20,75 Q65,10 100,50 T180,30" stroke="var(--purple-400)" stroke-width="1" fill="none" stroke-dasharray="260" stroke-dashoffset="260" opacity="0.4" class="anim-draw-delay2"/>
+              <rect x="140" y="20" width="45" height="22" rx="4" stroke="var(--purple-400)" stroke-width="0.8" opacity="0.4" fill="var(--bg-card)"/>
+              <text x="163" y="30" text-anchor="middle" fill="var(--purple-400)" font-size="6" opacity="0.6">stress</text>
+              <text x="163" y="38" text-anchor="middle" fill="var(--purple-400)" font-size="6" opacity="0.6">test</text>
+              <line x1="20" y1="100" x2="180" y2="100" stroke="var(--purple-400)" stroke-width="0.5" opacity="0.3"/>
+            </svg>
+          </div>
+          <p>Сценарный анализ: «что если пользователи уйдут на 50%?». Stress-тесты treasury, анализ чувствительности параметров.</p>
+          <div class="service-tags">
+            <span class="service-tag">Scenarios</span>
+            <span class="service-tag">Stress-тесты</span>
+            <span class="service-tag">Sensitivity</span>
+          </div>
+        </div>
+
+        <div class="service-card service-card-wide">
+          <div class="service-header">
+            <div class="service-number">05</div>
+            <h3>Документы</h3>
+          </div>
+          <div class="service-illustration">
+            <svg viewBox="0 0 400 100" fill="none">
+              <rect x="10" y="15" width="60" height="70" rx="6" stroke="var(--purple-500)" stroke-width="1" opacity="0.2"/>
+              <rect x="10" y="15" width="60" height="70" rx="6" stroke="var(--purple-400)" stroke-width="1.5" stroke-dasharray="260" stroke-dashoffset="260" class="anim-draw"/>
+              <line x1="20" y1="35" x2="60" y2="35" stroke="var(--purple-400)" stroke-width="0.8" opacity="0.4"/>
+              <line x1="20" y1="45" x2="55" y2="45" stroke="var(--purple-400)" stroke-width="0.8" opacity="0.3"/>
+              <line x1="20" y1="55" x2="50" y2="55" stroke="var(--purple-400)" stroke-width="0.8" opacity="0.2"/>
+              <text x="40" y="28" text-anchor="middle" fill="var(--purple-400)" font-size="7" opacity="0.7">docs</text>
+
+              <rect x="90" y="15" width="60" height="70" rx="6" stroke="var(--purple-500)" stroke-width="1" opacity="0.2"/>
+              <rect x="90" y="15" width="60" height="70" rx="6" stroke="var(--purple-400)" stroke-width="1.5" stroke-dasharray="260" stroke-dashoffset="260" class="anim-draw-delay1"/>
+              <polyline points="100,60 115,40 130,55 140,35" stroke="var(--purple-400)" stroke-width="1" fill="none" opacity="0.5"/>
+              <text x="120" y="28" text-anchor="middle" fill="var(--purple-400)" font-size="7" opacity="0.7">model</text>
+
+              <rect x="170" y="15" width="60" height="70" rx="6" stroke="var(--purple-500)" stroke-width="1" opacity="0.2"/>
+              <rect x="170" y="15" width="60" height="70" rx="6" stroke="var(--purple-400)" stroke-width="1.5" stroke-dasharray="260" stroke-dashoffset="260" class="anim-draw-delay2"/>
+              <circle cx="200" cy="55" r="15" stroke="var(--purple-400)" stroke-width="0.8" opacity="0.4" fill="none"/>
+              <path d="M192,55 L198,62 L210,48" stroke="var(--purple-400)" stroke-width="1" opacity="0.5"/>
+              <text x="200" y="28" text-anchor="middle" fill="var(--purple-400)" font-size="7" opacity="0.7">schema</text>
+
+              <rect x="250" y="15" width="60" height="70" rx="6" stroke="var(--purple-500)" stroke-width="1" opacity="0.2"/>
+              <rect x="250" y="15" width="60" height="70" rx="6" stroke="var(--purple-400)" stroke-width="1.5" stroke-dasharray="260" stroke-dashoffset="260" class="anim-draw-delay3"/>
+              <polygon points="280,40 295,55 280,70 265,55" stroke="var(--purple-400)" stroke-width="0.8" opacity="0.4" fill="none"/>
+              <text x="280" y="28" text-anchor="middle" fill="var(--purple-400)" font-size="7" opacity="0.7">slides</text>
+
+              <rect x="330" y="15" width="60" height="70" rx="6" stroke="var(--purple-500)" stroke-width="1" opacity="0.2"/>
+              <rect x="330" y="15" width="60" height="70" rx="6" stroke="var(--purple-400)" stroke-width="1.5" stroke-dasharray="260" stroke-dashoffset="260" class="anim-draw-delay3"/>
+              <rect x="345" y="45" width="30" height="20" rx="3" stroke="var(--purple-400)" stroke-width="0.8" opacity="0.4" fill="none"/>
+              <path d="M355,55 L365,48" stroke="var(--purple-400)" stroke-width="0.8" opacity="0.4"/>
+              <text x="360" y="28" text-anchor="middle" fill="var(--purple-400)" font-size="7" opacity="0.7">dashboard</text>
+            </svg>
+          </div>
+          <p>Whitepaper, описание концепта, схемы токеномики, финансовые модели, презентации для инвесторов, статьи для комьюнити, дашборды.</p>
+          <div class="service-tags">
+            <span class="service-tag">Whitepaper</span>
+            <span class="service-tag">Презентация</span>
+            <span class="service-tag">Дашборд</span>
+            <span class="service-tag">Комьюнити</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY US -->
+  <section class="section why-us" id="approach">
+    <div class="container">
+      <div class="section-label">Почему мы</div>
+      <h2 class="section-title">Прозрачность, наука, результат</h2>
+      <p class="section-subtitle">Мы не рисуем красивые графики на салфетке. Каждая модель подкреплена академической базой и проверена на реальных проектах.</p>
+
+      <div class="why-grid">
+        <div class="why-card">
+          <div class="why-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <h3>Полная прозрачность</h3>
+          <p>Почасовые отчёты ежедневно. Работаем на условиях Time & Materials с 25% предоплатой. Согласовываем объём работ заранее.</p>
+        </div>
+
+        <div class="why-card">
+          <div class="why-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+          </div>
+          <h3>Академическая база</h3>
+          <p><a href="https://www.youtube.com/watch?v=pitK0beCEA8&list=PLeLfGV5qnQybhgDjklLf39CJnD2aro7la" target="_blank" rel="noopener" style="color: var(--purple-400); border-bottom: 1px solid transparent; transition: border-color 0.2s;" onmouseover="this.style.borderBottomColor='var(--purple-400)'" onmouseout="this.style.borderBottomColor='transparent'">Курс токеномики в МФТИ</a> (лекции в открытом доступе). 40+ изученных механизмов дизайна. Эконометрика, теория игр, mechanism design.</p>
+        </div>
+
+        <div class="why-card">
+          <div class="why-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          </div>
+          <h3>Web2 + Web3</h3>
+          <p>Опыт финансового моделирования в традиционных компаниях плюс глубокое погружение в DeFi, DAO, GameFi, L1/L2 и инфраструктурные проекты.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CASES -->
+  <section class="section" id="cases">
+    <div class="container">
+      <div class="section-label">Кейсы</div>
+      <h2 class="section-title">Проекты, которым мы помогли</h2>
+      <p class="section-subtitle">Каждый проект уникален. Вот некоторые из наших работ.</p>
+
+      <div class="cases-grid">
+        <div class="case-card">
+          <div class="case-type">DeFi Lending</div>
+          <h3>8lends</h3>
+          <p>Разработка токеномики для DeFi-платформы кредитования. Механика Proof-of-Loan, дефляционная модель, система стимулов для поставщиков ликвидности.</p>
+          <div class="case-mechanics">
+            <span class="case-mechanic">Proof-of-Loan</span>
+            <span class="case-mechanic">Deflation</span>
+            <span class="case-mechanic">Liquidity Mining</span>
+          </div>
+        </div>
+
+        <div class="case-card">
+          <div class="case-type">DAO / Treasury</div>
+          <h3>Joystream</h3>
+          <p>CFO-as-a-Service для DAO. Управление казной, бюджетирование, финансовое планирование для децентрализованной видеоплатформы.</p>
+          <div class="case-mechanics">
+            <span class="case-mechanic">CFOaaS</span>
+            <span class="case-mechanic">Treasury</span>
+            <span class="case-mechanic">Budgeting</span>
+          </div>
+        </div>
+
+        <div class="case-card">
+          <div class="case-type">GameFi / Nodes</div>
+          <h3>Proof of Meme</h3>
+          <p>Модель экономики для игрового проекта с нодами. Дизайн пулов, реферальной системы, балансировка reward-механик.</p>
+          <div class="case-mechanics">
+            <span class="case-mechanic">Node Economy</span>
+            <span class="case-mechanic">Reward Pools</span>
+            <span class="case-mechanic">Referral System</span>
+          </div>
+        </div>
+
+        <div class="case-card">
+          <div class="case-type">Loyalty / Marketplace</div>
+          <h3>Marketplace Tokenomics</h3>
+          <p>Система лояльности на базе токенов для маркетплейса. Energy-механика, бусты, лутбоксы, конвертация в реальные скидки.</p>
+          <div class="case-mechanics">
+            <span class="case-mechanic">Energy System</span>
+            <span class="case-mechanic">Boosts</span>
+            <span class="case-mechanic">Lootbox</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INTERVIEWS -->
+  <section class="section" id="interviews">
+    <div class="container">
+      <div class="interviews-header">
+        <div>
+          <div class="section-label">Медиа</div>
+          <h2 class="section-title">Интервью и выступления</h2>
+        </div>
+        <div class="carousel-controls">
+          <button class="carousel-btn" id="carousel-prev" aria-label="Назад">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M12 4l-6 6 6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <button class="carousel-btn" id="carousel-next" aria-label="Вперёд">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M8 4l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="carousel-track-wrapper">
+        <div class="carousel-track" id="carousel-track">
+          <a href="https://www.youtube.com/watch?v=KhEtFTZI4N8" target="_blank" rel="noopener" class="interview-card">
+            <div class="interview-thumb">
+              <img src="https://img.youtube.com/vi/KhEtFTZI4N8/mqdefault.jpg" alt="Почему деньги не берутся из воздуха" loading="lazy">
+              <div class="interview-play">
+                <svg width="40" height="40" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="24" fill="rgba(124,58,237,0.85)"/><path d="M20 16l12 8-12 8V16z" fill="#fff"/></svg>
+              </div>
+            </div>
+            <div class="interview-info">
+              <h3>Почему деньги не берутся из воздуха</h3>
+              <span class="interview-channel">Хедлайнеры</span>
+            </div>
+          </a>
+
+          <a href="https://www.youtube.com/watch?v=OyPn44ZqUPo" target="_blank" rel="noopener" class="interview-card">
+            <div class="interview-thumb">
+              <img src="https://img.youtube.com/vi/OyPn44ZqUPo/mqdefault.jpg" alt="Говорим о токеномике" loading="lazy">
+              <div class="interview-play">
+                <svg width="40" height="40" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="24" fill="rgba(124,58,237,0.85)"/><path d="M20 16l12 8-12 8V16z" fill="#fff"/></svg>
+              </div>
+            </div>
+            <div class="interview-info">
+              <h3>Говорим о токеномике</h3>
+              <span class="interview-channel">MetaLamp CIS</span>
+            </div>
+          </a>
+
+          <a href="https://www.youtube.com/watch?v=cQbc-G8nrFM" target="_blank" rel="noopener" class="interview-card">
+            <div class="interview-thumb">
+              <img src="https://img.youtube.com/vi/cQbc-G8nrFM/mqdefault.jpg" alt="Токеномика LSD проекта" loading="lazy">
+              <div class="interview-play">
+                <svg width="40" height="40" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="24" fill="rgba(124,58,237,0.85)"/><path d="M20 16l12 8-12 8V16z" fill="#fff"/></svg>
+              </div>
+            </div>
+            <div class="interview-info">
+              <h3>Токеномика LSD проекта</h3>
+              <span class="interview-channel">Сергей Маслов</span>
+            </div>
+          </a>
+
+          <a href="https://www.youtube.com/watch?v=EWszXTfsVS4" target="_blank" rel="noopener" class="interview-card">
+            <div class="interview-thumb">
+              <img src="https://img.youtube.com/vi/EWszXTfsVS4/mqdefault.jpg" alt="Что такое Токеномика?" loading="lazy">
+              <div class="interview-play">
+                <svg width="40" height="40" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="24" fill="rgba(124,58,237,0.85)"/><path d="M20 16l12 8-12 8V16z" fill="#fff"/></svg>
+              </div>
+            </div>
+            <div class="interview-info">
+              <h3>Что такое Токеномика?</h3>
+              <span class="interview-channel">Сергей Маслов</span>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section" id="contact">
+    <div class="container">
+      <div class="cta-block">
+        <div class="section-label">Начнём работу</div>
+        <h2>Получите долгосрочного партнёра<br>для вашей токеномики</h2>
+        <p class="section-subtitle">Обсудим задачу на бесплатной 30-минутной консультации. Оплата в фиате или стейблкоинах.</p>
+
+        <div class="cta-actions">
+          <a href="https://t.me/karanyuk" class="btn-primary" target="_blank" rel="noopener">
+            Написать в Telegram
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <a href="mailto:alexey@karanyuk.com" class="btn-secondary">alexey@karanyuk.com</a>
+        </div>
+
+        <div class="cta-contacts">
+          <a href="https://linkedin.com/in/alexey-karanyuk/" target="_blank" rel="noopener">LinkedIn</a>
+          <a href="https://t.me/giants_tokenomics" target="_blank" rel="noopener">Telegram-канал</a>
+          <a href="https://www.youtube.com/playlist?list=PLeLfGV5qnQybhgDjklLf39CJnD2aro7la" target="_blank" rel="noopener">YouTube</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-left">
+          <img src="../assets/logo/Гиганты_w1.png" alt="Гиганты" style="height: 32px; width: auto;">
+        </div>
+
+        <nav class="footer-nav">
+          <a href="#services">Услуги</a>
+          <a href="#approach">Подход</a>
+          <a href="#cases">Кейсы</a>
+          <a href="#team">Команда</a>
+          <a href="#contact">Контакты</a>
+        </nav>
+
+        <div class="footer-social">
+          <a href="https://t.me/giants_tokenomics" target="_blank" rel="noopener" title="Telegram">TG</a>
+          <a href="https://www.youtube.com/playlist?list=PLeLfGV5qnQybhgDjklLf39CJnD2aro7la" target="_blank" rel="noopener" title="YouTube">YT</a>
+          <a href="https://github.com/giantstokenomics" target="_blank" rel="noopener" title="GitHub">GH</a>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <span class="footer-copy">&copy; 2026 Гиганты Лаборатория Токеномики. Все права защищены.</span>
+        <span class="footer-copy">gnts.io</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Mobile menu
+    const burger = document.getElementById('burger');
+    const mobileNav = document.getElementById('mobile-nav');
+
+    burger.addEventListener('click', () => {
+      burger.classList.toggle('open');
+      mobileNav.classList.toggle('open');
+      document.body.style.overflow = mobileNav.classList.contains('open') ? 'hidden' : '';
+    });
+
+    function closeMobile() {
+      burger.classList.remove('open');
+      mobileNav.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    // Particle network
+    (function initParticles() {
+      const canvas = document.getElementById('particles-canvas');
+      if (!canvas || window.innerWidth < 768) return;
+
+      const ctx = canvas.getContext('2d');
+      let w, h, particles, mouse = { x: -999, y: -999 };
+      const PARTICLE_COUNT = 60;
+      const CONNECT_DIST = 140;
+      const MOUSE_DIST = 180;
+
+      function resize() {
+        const rect = canvas.parentElement.getBoundingClientRect();
+        w = canvas.width = rect.width;
+        h = canvas.height = rect.height;
+      }
+
+      function createParticles() {
+        particles = [];
+        for (let i = 0; i < PARTICLE_COUNT; i++) {
+          particles.push({
+            x: Math.random() * w,
+            y: Math.random() * h,
+            vx: (Math.random() - 0.5) * 0.4,
+            vy: (Math.random() - 0.5) * 0.4,
+            r: Math.random() * 1.5 + 0.5,
+            alpha: Math.random() * 0.5 + 0.2
+          });
+        }
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, w, h);
+
+        // Draw connections
+        for (let i = 0; i < particles.length; i++) {
+          for (let j = i + 1; j < particles.length; j++) {
+            const dx = particles[i].x - particles[j].x;
+            const dy = particles[i].y - particles[j].y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < CONNECT_DIST) {
+              const alpha = (1 - dist / CONNECT_DIST) * 0.15;
+              ctx.strokeStyle = 'rgba(139, 92, 246, ' + alpha + ')';
+              ctx.lineWidth = 0.5;
+              ctx.beginPath();
+              ctx.moveTo(particles[i].x, particles[i].y);
+              ctx.lineTo(particles[j].x, particles[j].y);
+              ctx.stroke();
+            }
+          }
+
+          // Mouse connection
+          const mdx = particles[i].x - mouse.x;
+          const mdy = particles[i].y - mouse.y;
+          const mDist = Math.sqrt(mdx * mdx + mdy * mdy);
+          if (mDist < MOUSE_DIST) {
+            const alpha = (1 - mDist / MOUSE_DIST) * 0.3;
+            ctx.strokeStyle = 'rgba(168, 85, 247, ' + alpha + ')';
+            ctx.lineWidth = 0.8;
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(mouse.x, mouse.y);
+            ctx.stroke();
+          }
+        }
+
+        // Draw particles
+        for (const p of particles) {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(192, 132, 252, ' + p.alpha + ')';
+          ctx.fill();
+        }
+      }
+
+      function update() {
+        for (const p of particles) {
+          p.x += p.vx;
+          p.y += p.vy;
+          if (p.x < 0 || p.x > w) p.vx *= -1;
+          if (p.y < 0 || p.y > h) p.vy *= -1;
+        }
+      }
+
+      function loop() {
+        update();
+        draw();
+        requestAnimationFrame(loop);
+      }
+
+      canvas.parentElement.addEventListener('mousemove', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        mouse.x = e.clientX - rect.left;
+        mouse.y = e.clientY - rect.top;
+      });
+
+      canvas.parentElement.addEventListener('mouseleave', () => {
+        mouse.x = -999;
+        mouse.y = -999;
+      });
+
+      resize();
+      createParticles();
+      loop();
+      window.addEventListener('resize', () => { resize(); createParticles(); });
+    })();
+
+    // Header background on scroll
+    const header = document.getElementById('header');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 50) {
+        header.style.background = 'rgba(7, 6, 14, 0.95)';
+      } else {
+        header.style.background = 'rgba(7, 6, 14, 0.85)';
+      }
+    });
+
+    // Interviews carousel
+    (function() {
+      const track = document.getElementById('carousel-track');
+      const prevBtn = document.getElementById('carousel-prev');
+      const nextBtn = document.getElementById('carousel-next');
+      if (!track || !prevBtn || !nextBtn) return;
+
+      let pos = 0;
+
+      function getVisibleCount() {
+        if (window.innerWidth <= 768) return 1;
+        if (window.innerWidth <= 1024) return 2;
+        return 3;
+      }
+
+      function getCardWidth() {
+        const card = track.querySelector('.interview-card');
+        if (!card) return 0;
+        return card.offsetWidth + 16; // card width + gap
+      }
+
+      function update() {
+        track.style.transform = 'translateX(' + (-pos * getCardWidth()) + 'px)';
+      }
+
+      function maxPos() {
+        const total = track.querySelectorAll('.interview-card').length;
+        return Math.max(0, total - getVisibleCount());
+      }
+
+      prevBtn.addEventListener('click', () => {
+        pos = Math.max(0, pos - 1);
+        update();
+      });
+
+      nextBtn.addEventListener('click', () => {
+        pos = Math.min(maxPos(), pos + 1);
+        update();
+      });
+
+      window.addEventListener('resize', () => {
+        pos = Math.min(pos, maxPos());
+        update();
+      });
+    })();
+  </script>
+</body>
+</html>

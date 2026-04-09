@@ -1,0 +1,235 @@
+<!--
+  GNTS Calculator Component — Bonding Curve
+  Self-contained: inline CSS + JS, no dependencies.
+  Usage: copy this block into any article HTML.
+  Later: becomes Hugo shortcode {{< calculator type="bonding-curve" >}}
+-->
+<div class="gnts-calc" id="gnts-calc-bc">
+  <style>
+    .gnts-calc {
+      background: var(--bg-secondary, #ffffff);
+      border: 1px solid var(--border, rgba(0,0,0,0.08));
+      border-radius: 12px;
+      padding: 28px 32px;
+      margin: 36px 0;
+      font-family: var(--font-heading, 'Space Grotesk', sans-serif);
+    }
+    .gnts-calc-title {
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--accent, #7c3aed);
+      margin-bottom: 20px;
+    }
+    .gnts-calc-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    .gnts-calc-controls { display: flex; flex-direction: column; gap: 16px; max-width: 600px; }
+    .gnts-calc-param label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--text-primary, #1a1a2e);
+      margin-bottom: 4px;
+    }
+    .gnts-calc-param .val {
+      font-family: var(--font-mono, 'JetBrains Mono', monospace);
+      font-size: 0.8rem;
+      color: var(--accent, #7c3aed);
+      background: var(--accent-bg, rgba(124,58,237,0.05));
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+    .gnts-calc-param input[type="range"] {
+      width: 100%;
+      height: 4px;
+      -webkit-appearance: none;
+      appearance: none;
+      background: var(--border, rgba(0,0,0,0.08));
+      border-radius: 2px;
+      outline: none;
+    }
+    .gnts-calc-param input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      background: var(--accent, #7c3aed);
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(124,58,237,0.3);
+    }
+    .gnts-calc-chart {
+      position: relative;
+      background: var(--bg-primary, #f8f7f4);
+      border: 1px solid var(--border, rgba(0,0,0,0.08));
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .gnts-calc-chart svg {
+      display: block;
+      width: 100%;
+      height: 280px;
+    }
+    .gnts-calc-table {
+      margin-top: 20px;
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+    }
+    .gnts-calc-table th {
+      text-align: left;
+      font-weight: 600;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--accent, #7c3aed);
+      padding: 6px 10px;
+      border-bottom: 1px solid var(--border, rgba(0,0,0,0.08));
+    }
+    .gnts-calc-table td {
+      padding: 5px 10px;
+      color: var(--text-secondary, #4a4a5a);
+      font-family: var(--font-mono, 'JetBrains Mono', monospace);
+      font-size: 0.78rem;
+      border-bottom: 1px solid var(--border, rgba(0,0,0,0.04));
+    }
+    /* Already vertical — no media query needed for layout */
+  </style>
+
+  <div class="gnts-calc-title">Калькулятор bonding curve</div>
+
+  <div class="gnts-calc-grid">
+    <div class="gnts-calc-controls">
+      <div class="gnts-calc-param">
+        <label>Начальная цена (A) <span class="val" id="bc-val-a">0.10</span></label>
+        <input type="range" id="bc-a" min="0.01" max="1" step="0.01" value="0.10">
+      </div>
+      <div class="gnts-calc-param">
+        <label>Масштаб (B) <span class="val" id="bc-val-b">0.00001</span></label>
+        <input type="range" id="bc-b" min="0.000001" max="0.001" step="0.000001" value="0.00001">
+      </div>
+      <div class="gnts-calc-param">
+        <label>Крутизна (C) <span class="val" id="bc-val-c">1.50</span></label>
+        <input type="range" id="bc-c" min="0.5" max="3" step="0.1" value="1.5">
+      </div>
+      <div class="gnts-calc-param">
+        <label>Макс. supply <span class="val" id="bc-val-s">50 000</span></label>
+        <input type="range" id="bc-s" min="1000" max="500000" step="1000" value="50000">
+      </div>
+    </div>
+
+    <div>
+      <div class="gnts-calc-chart">
+        <svg id="bc-svg" viewBox="0 0 500 280" preserveAspectRatio="xMidYMid meet"></svg>
+      </div>
+      <table class="gnts-calc-table">
+        <thead><tr><th>Supply</th><th>Цена минтинга</th><th>Совокупная стоимость</th></tr></thead>
+        <tbody id="bc-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+  (function() {
+    const $ = id => document.getElementById(id);
+    const sliders = { a: $('bc-a'), b: $('bc-b'), c: $('bc-c'), s: $('bc-s') };
+    const vals = { a: $('bc-val-a'), b: $('bc-val-b'), c: $('bc-val-c'), s: $('bc-val-s') };
+    const svg = $('bc-svg');
+    const tbody = $('bc-tbody');
+
+    function price(t, a, b, c) { return a + b * Math.pow(t, c); }
+
+    function totalCost(t, a, b, c) {
+      // Approximate integral via trapezoidal rule
+      var n = 200, h = t / n, sum = 0;
+      for (var i = 0; i < n; i++) {
+        var t0 = i * h, t1 = (i + 1) * h;
+        sum += (price(t0, a, b, c) + price(t1, a, b, c)) * h / 2;
+      }
+      return sum;
+    }
+
+    function fmt(v) {
+      if (v >= 1e6) return (v / 1e6).toFixed(2) + 'M';
+      if (v >= 1e3) return (v / 1e3).toFixed(1) + 'K';
+      if (v >= 1) return v.toFixed(2);
+      if (v >= 0.001) return v.toFixed(4);
+      return v.toExponential(2);
+    }
+
+    function render() {
+      var a = +sliders.a.value, b = +sliders.b.value, c = +sliders.c.value, maxS = +sliders.s.value;
+      vals.a.textContent = a.toFixed(2);
+      vals.b.textContent = b < 0.0001 ? b.toExponential(1) : b.toFixed(6);
+      vals.c.textContent = c.toFixed(2);
+      vals.s.textContent = maxS.toLocaleString('ru-RU');
+
+      // Compute curve points
+      var W = 500, H = 280, pad = { t: 20, r: 20, b: 40, l: 60 };
+      var pw = W - pad.l - pad.r, ph = H - pad.t - pad.b;
+      var pts = [], maxP = 0;
+      for (var i = 0; i <= 100; i++) {
+        var t = (i / 100) * maxS;
+        var p = price(t, a, b, c);
+        pts.push({ t: t, p: p });
+        if (p > maxP) maxP = p;
+      }
+      maxP = maxP * 1.1 || 1;
+
+      // Build SVG
+      var polyPts = pts.map(function(pt) {
+        var x = pad.l + (pt.t / maxS) * pw;
+        var y = pad.t + ph - (pt.p / maxP) * ph;
+        return x + ',' + y;
+      }).join(' ');
+
+      // Fill area
+      var firstX = pad.l, lastX = pad.l + pw;
+      var bottomY = pad.t + ph;
+      var fillPts = pad.l + ',' + bottomY + ' ' + polyPts + ' ' + lastX + ',' + bottomY;
+
+      // Axis labels
+      var accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#7c3aed';
+      var muted = getComputedStyle(document.documentElement).getPropertyValue('--text-muted').trim() || '#8a8a9a';
+
+      var svgHTML = '';
+      // Grid lines
+      for (var g = 0; g <= 4; g++) {
+        var gy = pad.t + (g / 4) * ph;
+        var gv = maxP * (1 - g / 4);
+        svgHTML += '<line x1="' + pad.l + '" y1="' + gy + '" x2="' + (W - pad.r) + '" y2="' + gy + '" stroke="' + muted + '" stroke-opacity="0.15" stroke-dasharray="4,4"/>';
+        svgHTML += '<text x="' + (pad.l - 8) + '" y="' + (gy + 4) + '" text-anchor="end" fill="' + muted + '" font-size="10" font-family="JetBrains Mono, monospace">$' + fmt(gv) + '</text>';
+      }
+      // X axis labels
+      for (var g = 0; g <= 4; g++) {
+        var gx = pad.l + (g / 4) * pw;
+        var gt = maxS * (g / 4);
+        svgHTML += '<text x="' + gx + '" y="' + (H - 8) + '" text-anchor="middle" fill="' + muted + '" font-size="10" font-family="JetBrains Mono, monospace">' + fmt(gt) + '</text>';
+      }
+      // Fill + line
+      svgHTML += '<polygon points="' + fillPts + '" fill="' + accent + '" opacity="0.08"/>';
+      svgHTML += '<polyline points="' + polyPts + '" fill="none" stroke="' + accent + '" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>';
+      // Current endpoint
+      var lastPt = pts[pts.length - 1];
+      var cx = pad.l + pw, cy = pad.t + ph - (lastPt.p / maxP) * ph;
+      svgHTML += '<circle cx="' + cx + '" cy="' + cy + '" r="5" fill="' + accent + '"/>';
+
+      svg.innerHTML = svgHTML;
+
+      // Table
+      var rows = [0, 0.1, 0.25, 0.5, 0.75, 1].map(function(frac) {
+        var t = Math.round(frac * maxS);
+        return '<tr><td>' + t.toLocaleString('ru-RU') + '</td><td>$' + fmt(price(t, a, b, c)) + '</td><td>$' + fmt(totalCost(t, a, b, c)) + '</td></tr>';
+      });
+      tbody.innerHTML = rows.join('');
+    }
+
+    Object.values(sliders).forEach(function(sl) { sl.addEventListener('input', render); });
+    render();
+  })();
+  </script>
+</div>

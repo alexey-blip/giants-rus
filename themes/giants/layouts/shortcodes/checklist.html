@@ -1,0 +1,7 @@
+{{ $type := .Get "type" | default "check" }}
+{{ $class := "gnts-check" }}
+{{ if eq $type "curve" }}{{ $class = "gnts-check-curve" }}{{ end }}
+{{ if eq $type "step" }}{{ $class = "gnts-check-step" }}{{ end }}
+<ul class="{{ $class }}">
+  {{ .Inner }}
+</ul>

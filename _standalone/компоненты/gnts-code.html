@@ -1,0 +1,118 @@
+<!--
+  GNTS Code Component — Copyable Python snippet
+  Self-contained: inline CSS + JS.
+  Usage: copy block, replace content of <code> with your snippet.
+  Later: Hugo shortcode {{< code lang="python" colab="URL" >}}
+-->
+<div class="gnts-code">
+  <style>
+    .gnts-code {
+      margin: 28px 0;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border, rgba(0,0,0,0.08));
+    }
+    .gnts-code-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #151525;
+      padding: 8px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .gnts-code-lang {
+      font-family: var(--font-heading, 'Space Grotesk', sans-serif);
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #8a8aaa;
+    }
+    .gnts-code-actions { display: flex; gap: 8px; }
+    .gnts-code-btn {
+      font-family: var(--font-heading, 'Space Grotesk', sans-serif);
+      font-size: 0.7rem;
+      font-weight: 500;
+      color: #8a8aaa;
+      background: none;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 4px;
+      padding: 3px 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+    .gnts-code-btn:hover { color: #c084fc; border-color: rgba(192,132,252,0.3); }
+    .gnts-code-btn.copied { color: #34d399; border-color: rgba(52,211,153,0.3); }
+    .gnts-code pre {
+      background: #1a1a2e;
+      margin: 0;
+      padding: 20px 24px;
+      overflow-x: auto;
+      font-family: var(--font-mono, 'JetBrains Mono', monospace);
+      font-size: 0.84rem;
+      line-height: 1.7;
+      color: #e0e0ea;
+      border: none;
+      border-radius: 0;
+    }
+    .gnts-code pre code { background: none; padding: 0; color: inherit; }
+    /* Minimal syntax highlighting */
+    .gnts-code .kw { color: #c084fc; }       /* keywords */
+    .gnts-code .fn { color: #60a5fa; }       /* functions */
+    .gnts-code .str { color: #34d399; }      /* strings */
+    .gnts-code .num { color: #fbbf24; }      /* numbers */
+    .gnts-code .cmt { color: #6b7280; font-style: italic; } /* comments */
+    .gnts-code .op { color: #f87171; }       /* operators */
+  </style>
+
+  <div class="gnts-code-header">
+    <span class="gnts-code-lang">Python</span>
+    <div class="gnts-code-actions">
+      <button class="gnts-code-btn" onclick="gntsCodeCopy(this)">Копировать</button>
+      <!-- Optional: add Colab link -->
+      <!-- <a class="gnts-code-btn" href="https://colab.research.google.com/..." target="_blank" rel="noopener">Google Colab</a> -->
+    </div>
+  </div>
+  <pre><code><span class="kw">import</span> numpy <span class="kw">as</span> np
+<span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt
+
+<span class="kw">def</span> <span class="fn">bonding_curve_price</span>(supply, a, b, c):
+    <span class="str">"""Цена минтинга токена по формуле P = A + B * T^C"""</span>
+    <span class="kw">return</span> a + b * np.power(supply, c)
+
+<span class="kw">def</span> <span class="fn">total_cost</span>(supply, a, b, c, n_steps=<span class="num">1000</span>):
+    <span class="str">"""Совокупная стоимость минтинга (численное интегрирование)"""</span>
+    t = np.linspace(<span class="num">0</span>, supply, n_steps)
+    prices = bonding_curve_price(t, a, b, c)
+    <span class="kw">return</span> np.trapz(prices, t)
+
+<span class="cmt"># Параметры из домашнего задания МФТИ</span>
+A, B, C = <span class="num">0.10</span>, <span class="num">0.00001</span>, <span class="num">1.5</span>
+supply_range = np.linspace(<span class="num">0</span>, <span class="num">50000</span>, <span class="num">500</span>)
+prices = bonding_curve_price(supply_range, A, B, C)
+
+plt.figure(figsize=(<span class="num">10</span>, <span class="num">5</span>))
+plt.plot(supply_range, prices, color=<span class="str">'#7c3aed'</span>, linewidth=<span class="num">2</span>)
+plt.fill_between(supply_range, prices, alpha=<span class="num">0.1</span>, color=<span class="str">'#7c3aed'</span>)
+plt.xlabel(<span class="str">'Supply (токены)'</span>)
+plt.ylabel(<span class="str">'Цена минтинга ($)'</span>)
+plt.title(<span class="str">'Bonding Curve: P(T) = A + B * T^C'</span>)
+plt.grid(<span class="kw">True</span>, alpha=<span class="num">0.3</span>)
+plt.show()</code></pre>
+
+  <script>
+  function gntsCodeCopy(btn) {
+    var code = btn.closest('.gnts-code').querySelector('code');
+    var text = code.textContent || code.innerText;
+    navigator.clipboard.writeText(text).then(function() {
+      btn.textContent = 'Скопировано';
+      btn.classList.add('copied');
+      setTimeout(function() {
+        btn.textContent = 'Копировать';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  }
+  </script>
+</div>

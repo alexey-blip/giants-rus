@@ -1,0 +1,247 @@
+{{ define "main" }}
+<canvas id="stars-canvas"></canvas>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-planet"></div>
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-badge">Токеномика под ключ</div>
+      <h1>Проектируем <span class="accent">экономику токенов</span> для блокчейн-проектов</h1>
+      <p class="hero-subtitle">От концепции до симуляции. Модели предложения и спроса, механизм-дизайн, governance, vesting — всё в одном месте.</p>
+      <div class="hero-actions">
+        <a href="/basics/" class="btn-primary">Начать изучение →</a>
+        <a href="{{ .Site.Params.ctaOrder }}" class="btn-secondary">Заказать токеномику</a>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="number">30+</div>
+          <div class="label">проектов</div>
+        </div>
+        <div class="hero-stat">
+          <div class="number">9</div>
+          <div class="label">лекций курса</div>
+        </div>
+        <div class="hero-stat">
+          <div class="number">15+</div>
+          <div class="label">моделей</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Problem -->
+<section class="section problem">
+  <div class="container">
+    <div class="problem-header">
+      <div class="section-label">Проблема</div>
+      <h2 class="section-title">Почему токеномика проваливается</h2>
+      <p class="section-subtitle">Большинство проектов теряют деньги из-за ошибок в экономическом дизайне</p>
+    </div>
+    <div class="problem-cards">
+      <div class="problem-card">
+        <div class="problem-card-icon">📉</div>
+        <h3>Ошибки в модели предложения</h3>
+        <p>Неверная эмиссия, отсутствие дефляционных механизмов, неработающий vesting — токен падает после TGE</p>
+      </div>
+      <div class="problem-card">
+        <div class="problem-card-icon">🎭</div>
+        <h3>Театр governance</h3>
+        <p>Голосование как формальность. Киты решают всё заранее, а community создаёт иллюзию демократии</p>
+      </div>
+      <div class="problem-card">
+        <div class="problem-card-icon">🔄</div>
+        <h3>Нет реального спроса</h3>
+        <p>Токен существует ради токена. Без utility-модели, привязанной к продукту, цена держится только на хайпе</p>
+      </div>
+    </div>
+    <div class="problem-conclusion">
+      Токеномика — это не распределение токенов. Это проектирование устойчивой экономической системы.
+    </div>
+  </div>
+</section>
+
+<!-- Services -->
+<section class="section">
+  <div class="container">
+    <div class="section-label">Что мы делаем</div>
+    <h2 class="section-title">Услуги</h2>
+    <p class="section-subtitle">Полный цикл от исследования до реализации</p>
+    <div class="services-grid">
+      <div class="service-card">
+        <div class="service-number">01</div>
+        <h3>Проектирование токеномики</h3>
+        <p>Модели предложения и спроса, механизм-дизайн, балансировка стимулов, симуляция сценариев</p>
+        <div class="service-tags">
+          <span class="service-tag">Supply models</span>
+          <span class="service-tag">Demand models</span>
+          <span class="service-tag">Simulation</span>
+        </div>
+      </div>
+      <div class="service-card">
+        <div class="service-number">02</div>
+        <h3>Governance дизайн</h3>
+        <p>Структура голосования, кворумы, делегирование, механизмы защиты от атак</p>
+        <div class="service-tags">
+          <span class="service-tag">DAO</span>
+          <span class="service-tag">Voting</span>
+          <span class="service-tag">Multisig</span>
+        </div>
+      </div>
+      <div class="service-card">
+        <div class="service-number">03</div>
+        <h3>Аудит и консалтинг</h3>
+        <p>Анализ существующей токеномики, поиск уязвимостей, рекомендации по улучшению</p>
+        <div class="service-tags">
+          <span class="service-tag">Audit</span>
+          <span class="service-tag">Risk analysis</span>
+        </div>
+      </div>
+      <div class="service-card">
+        <div class="service-number">04</div>
+        <h3>Обучение</h3>
+        <p>Курс токеномики, семинары, мастер-классы для команд. Контент для вашей базы знаний</p>
+        <div class="service-tags">
+          <span class="service-tag">Course</span>
+          <span class="service-tag">Workshops</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Why Us -->
+<section class="section why-us">
+  <div class="container">
+    <div style="text-align: center; margin-bottom: 12px;">
+      <div class="section-label">Почему мы</div>
+      <h2 class="section-title">Опыт и глубина</h2>
+    </div>
+    <div class="why-grid">
+      <div class="why-card">
+        <div class="why-icon">🎓</div>
+        <h3>Академическая база</h3>
+        <p>Курс токеномики на базе МФТИ. Научные публикации по governance</p>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">⚙️</div>
+        <h3>Практика</h3>
+        <p>30+ реальных проектов. DeFi, GameFi, DePin, prediction markets</p>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">📊</div>
+        <h3>Инструменты</h3>
+        <p>Собственные калькуляторы, симуляторы bonding curves, модели в Google Sheets</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Cases -->
+<section class="section">
+  <div class="container">
+    <div class="section-label">Кейсы</div>
+    <h2 class="section-title">Примеры работ</h2>
+    <p class="section-subtitle">Анонимизированные кейсы из реальных проектов</p>
+    <div class="cases-grid">
+      <div class="case-card">
+        <div class="case-type">DeFi Lending</div>
+        <h3>Bonding curve для кредитного протокола</h3>
+        <p>Модель с экспоненциальной кривой ценообразования. Рост цены от 1 до 25 USDT при увеличении supply</p>
+        <div class="case-mechanics">
+          <span class="case-mechanic">Bonding Curve</span>
+          <span class="case-mechanic">Proof-of-Loan</span>
+          <span class="case-mechanic">Vesting</span>
+        </div>
+      </div>
+      <div class="case-card">
+        <div class="case-type">GameFi</div>
+        <h3>Экономика мобильной игры</h3>
+        <p>Двухтокенная модель с sink/source балансировкой. Устойчивая экономика на 18+ месяцев</p>
+        <div class="case-mechanics">
+          <span class="case-mechanic">Dual Token</span>
+          <span class="case-mechanic">Sink/Source</span>
+          <span class="case-mechanic">NFT Utility</span>
+        </div>
+      </div>
+      <div class="case-card">
+        <div class="case-type">DAO Governance</div>
+        <h3>Система голосования для протокола</h3>
+        <p>200+ параметров. Квадратичное голосование, делегирование, защита от sybil-атак</p>
+        <div class="case-mechanics">
+          <span class="case-mechanic">Quadratic Voting</span>
+          <span class="case-mechanic">Delegation</span>
+          <span class="case-mechanic">Sybil Resistance</span>
+        </div>
+      </div>
+      <div class="case-card">
+        <div class="case-type">DePin</div>
+        <h3>Токенизация физической инфраструктуры</h3>
+        <p>Модель стимулов для операторов узлов с вестингом и slashing-механизмами</p>
+        <div class="case-mechanics">
+          <span class="case-mechanic">Node Rewards</span>
+          <span class="case-mechanic">Slashing</span>
+          <span class="case-mechanic">Staking</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Interviews -->
+<section class="section interviews">
+  <div class="container">
+    <div class="interviews-header">
+      <div>
+        <div class="section-label">Медиа</div>
+        <h2 class="section-title">Интервью и выступления</h2>
+      </div>
+      <div class="carousel-controls">
+        <button class="carousel-btn" onclick="scrollCarousel(-1)">←</button>
+        <button class="carousel-btn" onclick="scrollCarousel(1)">→</button>
+      </div>
+    </div>
+    <div class="interview-track" id="interview-track">
+      {{ $interviews := slice
+        (dict "id" "KhEtFTZI4N8" "title" "Почему деньги не берутся из воздуха" "channel" "Хедлайнеры")
+        (dict "id" "OyPn44ZqUPo" "title" "Говорим о токеномике" "channel" "MetaLamp CIS")
+        (dict "id" "cQbc-G8nrFM" "title" "Токеномика LSD проекта" "channel" "Сергей Маслов")
+        (dict "id" "EWszXTfsVS4" "title" "Что такое Токеномика?" "channel" "Сергей Маслов")
+        (dict "id" "LDUXLvCJC2k" "title" "Лекция 1: Оценка бизнеса" "channel" "МФТИ Курс")
+        (dict "id" "dk8CRU6g-VA" "title" "Лекция 2: Стейкхолдеры" "channel" "МФТИ Курс")
+      }}
+      {{ range $interviews }}
+      <a href="https://www.youtube.com/watch?v={{ .id }}" target="_blank" rel="noopener" class="interview-card">
+        <div class="interview-thumb">
+          <img src="https://img.youtube.com/vi/{{ .id }}/mqdefault.jpg" alt="{{ .title }}" loading="lazy">
+          <div class="play-icon">▶</div>
+        </div>
+        <div class="interview-info">
+          <h3>{{ .title }}</h3>
+          <span class="interview-channel">{{ .channel }}</span>
+        </div>
+      </a>
+      {{ end }}
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="container">
+    <div class="cta-block">
+      <h2>Готовы спроектировать токеномику?</h2>
+      <p class="section-subtitle">Расскажите о вашем проекте — обсудим задачу и предложим подход</p>
+      <div class="cta-actions">
+        <a href="{{ .Site.Params.ctaOrder }}" class="btn-primary">Заказать токеномику →</a>
+        <a href="{{ .Site.Params.ctaConsultation }}" class="btn-secondary">Бесплатная консультация</a>
+      </div>
+      <div class="cta-contacts">
+        <a href="{{ .Site.Params.telegram }}">Telegram</a>
+        <a href="{{ .Site.Params.youtube }}">YouTube</a>
+      </div>
+    </div>
+  </div>
+</section>
+{{ end }}

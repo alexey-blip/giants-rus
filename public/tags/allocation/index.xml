@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Allocation on Гиганты — Лаборатория Токеномики</title>
+    <link>http://localhost:1313/tags/allocation/</link>
+    <description>Recent content in Allocation on Гиганты — Лаборатория Токеномики</description>
+    <generator>Hugo</generator>
+    <language>ru</language>
+    <lastBuildDate>Thu, 09 Apr 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/allocation/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>5 моделей предложения токенов</title>
+      <link>http://localhost:1313/models/token-supply-models/</link>
+      <pubDate>Thu, 09 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/models/token-supply-models/</guid>
+      <description>&lt;h2 id=&#34;что-такое-модель-предложения&#34;&gt;Что такое модель предложения&lt;/h2&gt;&#xA;&lt;p&gt;Модель предложения (supply model) определяет, &lt;strong&gt;как токены появляются&lt;/strong&gt; в системе и &lt;strong&gt;как они попадают&lt;/strong&gt; к участникам. Это фундамент любой токеномики — без него невозможно спроектировать ни спрос, ни governance.&lt;/p&gt;&#xA;&lt;p&gt;Модель предложения отвечает на три вопроса:&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;&lt;strong&gt;Сколько токенов&lt;/strong&gt; существует (или будет существовать)?&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Кто получает&lt;/strong&gt; токены и на каких условиях?&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Как меняется предложение&lt;/strong&gt; со временем — растёт, сокращается или остаётся фиксированным?&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;p&gt;В практике токеномики выделяют &lt;strong&gt;пять базовых моделей&lt;/strong&gt;, каждая из которых решает свой класс задач. Проект может использовать одну модель или комбинировать несколько.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

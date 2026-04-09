@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>5 моделей предложения токенов — Гиганты — Лаборатория Токеномики</title>
+  <meta name="description" content="Allocation, bonding curve, airdrop, reward, market — пять способов создать и распределить токены. Разбор каждой модели с примерами, формулами и калькуляторами.">
+  <meta name="author" content="Алексей Каранюк">
+
+  
+  <meta property="og:title" content="5 моделей предложения токенов">
+  <meta property="og:description" content="Allocation, bonding curve, airdrop, reward, market — пять способов создать и распределить токены. Разбор каждой модели с примерами, формулами и калькуляторами.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="http://localhost:1313/models/token-supply-models/">
+  <meta property="og:image" content="/images/og-default.png">
+  <meta property="og:locale" content="ru_RU">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="canonical" href="http://localhost:1313/models/token-supply-models/">
+  <link rel="icon" href="/images/favicon.ico">
+
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <header class="header">
+  <div class="header-inner">
+    <a href="/" class="logo">
+      <img class="logo-img logo-img--dark" src="/images/logo-black.png" alt="Гиганты" height="28">
+      <img class="logo-img logo-img--light" src="/images/logo-white.png" alt="Гиганты" height="28">
+    </a>
+
+    <nav class="nav">
+      
+        
+        <a href="/basics/">Основы</a>
+        
+      
+        
+        <a href="/models/">Модели</a>
+        
+      
+        
+        <a href="/governance/">Governance</a>
+        
+      
+        
+        <a href="/cases/">Кейсы</a>
+        
+      
+        
+        <a href="/validators/">Валидаторы</a>
+        
+      
+        
+      
+    </nav>
+
+    <a href="https://gnts.io/order/" class="header-cta">Заказать токеномику</a>
+
+    <button class="burger" aria-label="Меню">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+</header>
+
+<div class="mobile-nav">
+  
+    
+    <a href="/basics/">Основы</a>
+    
+  
+    
+    <a href="/models/">Модели</a>
+    
+  
+    
+    <a href="/governance/">Governance</a>
+    
+  
+    
+    <a href="/cases/">Кейсы</a>
+    
+  
+    
+    <a href="/validators/">Валидаторы</a>
+    
+  
+    
+  
+  <a href="https://gnts.io/order/" class="header-cta">Заказать токеномику</a>
+</div>
+
+
+  
+<div class="page">
+  <div class="main">
+    
+    <div class="breadcrumbs">
+      <a href="/">Главная</a>
+      <span class="sep">/</span>
+      
+        
+        <a href="http://localhost:1313/models/">Модели и инструменты</a>
+        <span class="sep">/</span>
+        
+      
+      <span>5 моделей предложения токенов</span>
+    </div>
+
+    
+    <div class="article-header">
+      
+      <div class="article-label">
+        Модели
+      </div>
+      
+      <h1>5 моделей предложения токенов</h1>
+      <p class="lead">Allocation, bonding curve, airdrop, reward, market — пять способов создать и распределить токены. Разбор каждой модели с примерами, формулами и калькуляторами.</p>
+      <div class="article-meta">
+        <time datetime="2026-04-09">9 April 2026</time>
+        <span>6 мин. чтения</span>
+      </div>
+    </div>
+
+    
+    <div class="content">
+      <h2 id="что-такое-модель-предложения">Что такое модель предложения</h2>
+<p>Модель предложения (supply model) определяет, <strong>как токены появляются</strong> в системе и <strong>как они попадают</strong> к участникам. Это фундамент любой токеномики — без него невозможно спроектировать ни спрос, ни governance.</p>
+<p>Модель предложения отвечает на три вопроса:</p>
+<ol>
+<li><strong>Сколько токенов</strong> существует (или будет существовать)?</li>
+<li><strong>Кто получает</strong> токены и на каких условиях?</li>
+<li><strong>Как меняется предложение</strong> со временем — растёт, сокращается или остаётся фиксированным?</li>
+</ol>
+<p>В практике токеномики выделяют <strong>пять базовых моделей</strong>, каждая из которых решает свой класс задач. Проект может использовать одну модель или комбинировать несколько.</p>
+
+<div class="callout default">
+  <div class="callout-title">Важно</div>
+  Вестинг — это не модель предложения. Это механизм контроля <em>скорости</em> выпуска токенов, который комбинируется с любой из пяти моделей. Подробнее о вестинге — в отдельной статье.
+</div>
+
+<h2 id="1-allocation--начальное-распределение">1. Allocation — начальное распределение</h2>
+<p><strong>Суть:</strong> фиксированный объём токенов распределяется между группами участников в момент создания проекта.</p>
+<p>Это самая распространённая модель. Общее количество токенов (total supply) определяется заранее, а затем делится на пулы:</p>
+<table>
+  <thead>
+      <tr>
+          <th>Пул</th>
+          <th>Типичная доля</th>
+          <th>Назначение</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Команда и фаундеры</td>
+          <td>15–20%</td>
+          <td>Мотивация создателей</td>
+      </tr>
+      <tr>
+          <td>Инвесторы (seed, private)</td>
+          <td>10–25%</td>
+          <td>Привлечение капитала</td>
+      </tr>
+      <tr>
+          <td>Казна (treasury)</td>
+          <td>15–30%</td>
+          <td>Развитие экосистемы</td>
+      </tr>
+      <tr>
+          <td>Комьюнити и стимулы</td>
+          <td>20–40%</td>
+          <td>Привлечение пользователей</td>
+      </tr>
+      <tr>
+          <td>Ликвидность</td>
+          <td>5–15%</td>
+          <td>Обеспечение торговли</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="ключевые-решения">Ключевые решения</h3>
+<p><strong>Размер total supply.</strong> Психологически 1 млрд токенов воспринимается иначе, чем 21 млн. Но с точки зрения экономики разницы нет — важна не абсолютная цифра, а доли распределения.</p>
+<p><strong>Баланс между группами.</strong> Если слишком много уходит инвесторам — давление на продажу после разблокировки. Если слишком мало — сложно привлечь капитал. Типичное соотношение: не более 25% для всех раундов инвесторов в совокупности.</p>
+<p><strong>Прозрачность.</strong> Каждый пул должен быть задокументирован: размер, адрес кошелька, условия разблокировки.</p>
+<h3 id="когда-использовать">Когда использовать</h3>
+<p>Allocation — базовая модель для любого проекта с привлечением инвестиций. Подходит для проектов, которые точно знают своих стейкхолдеров на старте.</p>
+
+<div class="callout warning">
+  <div class="callout-title">Типичная ошибка</div>
+  Создавать пул «на будущее» без чёткого назначения. Неиспользованные токены — это неопределённость для инвесторов и давление на цену.
+</div>
+
+<h2 id="2-bonding-curve--динамическое-ценообразование">2. Bonding Curve — динамическое ценообразование</h2>
+<p><strong>Суть:</strong> токены создаются (минтятся) по математической формуле, где цена зависит от текущего supply.</p>
+<p>В отличие от allocation, здесь нет фиксированного total supply. Новые токены появляются, когда кто-то покупает их у смарт-контракта, и уничтожаются при продаже обратно.</p>
+<h3 id="формула">Формула</h3>
+<div class="formula">
+  <div class="math">P(T) = A &#43; B × T^C</div>
+  <div class="desc">P — цена, T — текущий supply, A — начальная цена, B — масштаб, C — крутизна кривой</div>
+</div>
+
+<p>Три параметра управляют поведением кривой:</p>
+<ul>
+<li><strong>A</strong> (начальная цена) — цена первого токена. Определяет порог входа</li>
+<li><strong>B</strong> (масштаб) — насколько быстро растёт цена в абсолютных значениях</li>
+<li><strong>C</strong> (крутизна) — форма кривой. При C = 1 рост линейный, при C &gt; 1 — экспоненциальный</li>
+</ul>
+<h3 id="как-это-работает-на-практике">Как это работает на практике</h3>
+<p>При C = 1.5 и начальных параметрах A = 0.10, B = 0.00001:</p>
+<table>
+  <thead>
+      <tr>
+          <th>Supply</th>
+          <th>Цена минтинга</th>
+          <th>Совокупная стоимость</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>0</td>
+          <td>$0.10</td>
+          <td>$0</td>
+      </tr>
+      <tr>
+          <td>10 000</td>
+          <td>$0.11</td>
+          <td>~$1 050</td>
+      </tr>
+      <tr>
+          <td>25 000</td>
+          <td>$0.15</td>
+          <td>~$2 900</td>
+      </tr>
+      <tr>
+          <td>50 000</td>
+          <td>$0.21</td>
+          <td>~$7 600</td>
+      </tr>
+  </tbody>
+</table>
+<p>Ранние участники получают токены дешевле — это естественный стимул для первых пользователей.</p>
+<h3 id="преимущества">Преимущества</h3>
+<ul>
+<li><strong>Автоматическая ликвидность</strong> — всегда можно купить или продать через контракт</li>
+<li><strong>Прозрачное ценообразование</strong> — формула открыта, нет манипуляций</li>
+<li><strong>Стимул для ранних участников</strong> — цена растёт с ростом сообщества</li>
+</ul>
+<h3 id="риски">Риски</h3>
+<ul>
+<li><strong>Необратимость параметров</strong> — ошибка в A, B, C закладывается навсегда</li>
+<li><strong>Фронтраннинг</strong> — крупные покупки видны в мемпуле, арбитражники могут опережать</li>
+<li><strong>Сложность для пользователей</strong> — не все понимают механику</li>
+</ul>
+<h3 id="когда-использовать-1">Когда использовать</h3>
+<p>Bonding curve подходит для проектов без централизованного привлечения инвестиций: DAO, community tokens, протоколы непрерывного финансирования (continuous funding).</p>
+<h2 id="3-airdrop--бесплатная-раздача">3. Airdrop — бесплатная раздача</h2>
+<p><strong>Суть:</strong> токены раздаются бесплатно определённой группе пользователей по заранее заданным критериям.</p>
+<p>Airdrop — это не просто маркетинговый инструмент. В контексте моделей предложения это способ <strong>начальной дистрибуции</strong>, который решает проблему «холодного старта»: как привлечь первых пользователей, когда токен ещё ничего не стоит.</p>
+<h3 id="критерии-распределения">Критерии распределения</h3>
+<table>
+  <thead>
+      <tr>
+          <th>Критерий</th>
+          <th>Пример</th>
+          <th>Плюсы</th>
+          <th>Минусы</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Активность в протоколе</td>
+          <td>Количество транзакций</td>
+          <td>Вознаграждает реальных пользователей</td>
+          <td>Фарминг ботами</td>
+      </tr>
+      <tr>
+          <td>Стейкинг/удержание</td>
+          <td>Держал ETH &gt; 6 месяцев</td>
+          <td>Привлекает лояльных</td>
+          <td>Исключает новых</td>
+      </tr>
+      <tr>
+          <td>Социальная активность</td>
+          <td>Голосования в DAO</td>
+          <td>Вовлечённость</td>
+          <td>Легко подделать</td>
+      </tr>
+      <tr>
+          <td>Ретроактивный</td>
+          <td>Пользовался до объявления</td>
+          <td>Справедливый</td>
+          <td>Нельзя планировать</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="ключевое-решение-размер-дропа">Ключевое решение: размер дропа</h3>
+<p>Слишком маленький airdrop (&lt; 5% supply) — пользователи разочарованы, продают немедленно. Слишком большой (&gt; 30%) — давление на цену, обесценивание для инвесторов.</p>
+<p>Оптимум для большинства проектов — <strong>10–15% от total supply</strong> с условиями удержания (например, линейная разблокировка в течение 6 месяцев).</p>
+<h3 id="когда-использовать-2">Когда использовать</h3>
+<p>Airdrop эффективен как <strong>дополнение</strong> к allocation. Самостоятельно он редко работает — нужна базовая модель распределения, к которой airdrop добавляет охват.</p>
+<h2 id="4-reward--майнинг-и-вознаграждение">4. Reward — майнинг и вознаграждение</h2>
+<p><strong>Суть:</strong> новые токены создаются как награда за полезные действия в системе.</p>
+<p>Это модель Bitcoin: новые BTC не распределяются заранее, а появляются как вознаграждение майнеров за подтверждение транзакций. Но reward-модель не ограничивается майнингом.</p>
+<h3 id="виды-вознаграждений">Виды вознаграждений</h3>
+<ul>
+<li><strong>Proof-of-Work</strong> — за вычислительную работу (Bitcoin, старый Ethereum)</li>
+<li><strong>Proof-of-Stake</strong> — за блокировку капитала (Ethereum 2.0, Solana)</li>
+<li><strong>Proof-of-Storage</strong> — за хранение данных (Filecoin, Arweave)</li>
+<li><strong>Proof-of-Activity</strong> — за активное участие (Helium, DePIN-проекты)</li>
+</ul>
+<h3 id="эмиссионная-кривая">Эмиссионная кривая</h3>
+<p>В reward-модели критически важна <strong>скорость эмиссии</strong>. Слишком высокая — инфляция обесценивает токен. Слишком низкая — недостаточно стимулов для участников.</p>
+<p>Классическое решение — <strong>убывающая эмиссия</strong>: вознаграждение уменьшается по расписанию (как халвинг в Bitcoin каждые ~4 года).</p>
+<h3 id="проблема-ton">Проблема TON</h3>
+<p>Показательный пример: сеть TON увеличивала минтинг на 20% ежегодно, при этом сбор комиссий упал на 70%. Результат — токен генерируется быстрее, чем создаётся спрос. Это классический сценарий провала reward-модели без балансирующего механизма спроса.</p>
+<h3 id="когда-использовать-3">Когда использовать</h3>
+<p>Reward-модель необходима для <strong>инфраструктурных проектов</strong>, где участники выполняют работу для сети: валидаторы, майнеры, операторы узлов, поставщики данных.</p>
+<h2 id="5-market--рыночное-создание">5. Market — рыночное создание</h2>
+<p><strong>Суть:</strong> токены создаются через рыночные механизмы — пулы ликвидности, AMM, ордербуки.</p>
+<p>Эта модель отличается от остальных: здесь предложение формируется не по расписанию, а в зависимости от рыночных условий. Токены появляются, когда рынок готов их принять.</p>
+<h3 id="механизмы">Механизмы</h3>
+<p><strong>AMM (Automated Market Maker)</strong> — токены обращаются в пуле ликвидности. Цена определяется формулой (CPMM в Uniswap: x × y = k). Новые токены не создаются автоматически, но поведение пула влияет на эффективное предложение.</p>
+<p><strong>Ордербук</strong> — классическая книга заявок. Маркетмейкеры обеспечивают ликвидность, выставляя заявки на покупку и продажу.</p>
+<p><strong>Intent-based</strong> — новая модель, где пользователь заявляет намерение (intent), а солверы конкурируют за его исполнение.</p>
+<h3 id="когда-использовать-4">Когда использовать</h3>
+<p>Market-модель — это модель <strong>вторичного обращения</strong>. Она не заменяет allocation или reward, а дополняет их, обеспечивая ликвидность и ценообразование после первичного распределения.</p>
+<h2 id="как-комбинировать-модели">Как комбинировать модели</h2>
+<p>На практике проекты используют <strong>комбинации моделей</strong>:</p>
+<table>
+  <thead>
+      <tr>
+          <th>Проект</th>
+          <th>Allocation</th>
+          <th>Bonding</th>
+          <th>Airdrop</th>
+          <th>Reward</th>
+          <th>Market</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Типичный DeFi</td>
+          <td><span class="td-yes">✓</span> Основная</td>
+          <td><span class="td-no">✗</span></td>
+          <td><span class="td-yes">✓</span> Для охвата</td>
+          <td><span class="td-yes">✓</span> Стейкинг</td>
+          <td><span class="td-yes">✓</span> AMM</td>
+      </tr>
+      <tr>
+          <td>DAO</td>
+          <td><span class="td-yes">✓</span> Минимальная</td>
+          <td><span class="td-yes">✓</span> Основная</td>
+          <td><span class="td-yes">✓</span> Для охвата</td>
+          <td><span class="td-no">✗</span></td>
+          <td><span class="td-no">✗</span></td>
+      </tr>
+      <tr>
+          <td>L1 блокчейн</td>
+          <td><span class="td-yes">✓</span> Основная</td>
+          <td><span class="td-no">✗</span></td>
+          <td><span class="td-yes">✓</span> Testnet</td>
+          <td><span class="td-yes">✓</span> Валидация</td>
+          <td><span class="td-yes">✓</span> Биржи</td>
+      </tr>
+      <tr>
+          <td>DePin</td>
+          <td><span class="td-yes">✓</span> Основная</td>
+          <td><span class="td-no">✗</span></td>
+          <td><span class="td-no">✗</span></td>
+          <td><span class="td-yes">✓</span> Основная</td>
+          <td><span class="td-yes">✓</span> DEX</td>
+      </tr>
+      <tr>
+          <td>Мемкоин</td>
+          <td><span class="td-yes">✓</span> Полная</td>
+          <td><span class="td-yes">✓</span> pump.fun</td>
+          <td><span class="td-yes">✓</span> Маркетинг</td>
+          <td><span class="td-no">✗</span></td>
+          <td><span class="td-yes">✓</span> DEX</td>
+      </tr>
+  </tbody>
+</table>
+<p>Важно: выбор комбинации зависит от <strong>типа проекта</strong>, а не от моды. Не нужно использовать bonding curve только потому, что это модно — она подходит не для каждого кейса.</p>
+<h2 id="чек-лист-для-проектирования">Чек-лист для проектирования</h2>
+<p>Перед выбором модели предложения ответьте на вопросы:</p>
+<ol>
+<li>Есть ли фиксированный total supply? Если да → allocation как основа</li>
+<li>Нужна ли автоматическая ликвидность с первого дня? Если да → bonding curve</li>
+<li>Нужно ли привлечь существующих пользователей? Если да → airdrop</li>
+<li>Участники выполняют работу для сети? Если да → reward</li>
+<li>Как будет происходить торговля после запуска? → market-модель</li>
+</ol>
+<div class="article-cta">
+  <h3>Нужна помощь с моделью предложения?</h3>
+  <p>Спроектируем распределение токенов под ваш проект</p>
+  <a href="https://gnts.io/order/" class="btn-primary">
+    Обсудить задачу →
+  </a>
+</div>
+
+
+    </div>
+
+    
+    
+    <div class="article-tags">
+      
+      <a href="/tags/%D1%82%D0%BE%D0%BA%D0%B5%D0%BD%D0%BE%D0%BC%D0%B8%D0%BA%D0%B0/" class="tag">#токеномика</a>
+      
+      <a href="/tags/%D0%BF%D1%80%D0%B5%D0%B4%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5/" class="tag">#предложение</a>
+      
+      <a href="/tags/allocation/" class="tag">#allocation</a>
+      
+      <a href="/tags/bonding-curve/" class="tag">#bonding curve</a>
+      
+      <a href="/tags/airdrop/" class="tag">#airdrop</a>
+      
+    </div>
+    
+
+    
+    
+    
+    <div class="related-articles">
+      <h3>Читайте также</h3>
+      <ul>
+        
+        <li><a href="http://localhost:1313/models/agent-based-modeling/">Агентное моделирование в токеномике</a></li>
+        
+        <li><a href="http://localhost:1313/basics/what-is-tokenomics/">Что такое токеномика</a></li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+  
+  <aside class="sidebar-toc">
+    <div class="sidebar-toc-title">Содержание</div>
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#что-такое-модель-предложения">Что такое модель предложения</a></li>
+    <li><a href="#1-allocation--начальное-распределение">1. Allocation — начальное распределение</a></li>
+    <li><a href="#2-bonding-curve--динамическое-ценообразование">2. Bonding Curve — динамическое ценообразование</a></li>
+    <li><a href="#3-airdrop--бесплатная-раздача">3. Airdrop — бесплатная раздача</a></li>
+    <li><a href="#4-reward--майнинг-и-вознаграждение">4. Reward — майнинг и вознаграждение</a></li>
+    <li><a href="#5-market--рыночное-создание">5. Market — рыночное создание</a></li>
+    <li><a href="#как-комбинировать-модели">Как комбинировать модели</a></li>
+    <li><a href="#чек-лист-для-проектирования">Чек-лист для проектирования</a></li>
+  </ul>
+</nav>
+  </aside>
+</div>
+
+
+  <footer class="footer">
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-left">
+        <a href="/" class="logo">
+          <img class="logo-img logo-img--dark" src="/images/logo-black.png" alt="Гиганты" height="22">
+          <img class="logo-img logo-img--light" src="/images/logo-white.png" alt="Гиганты" height="22">
+        </a>
+      </div>
+
+      <nav class="footer-nav">
+        
+          
+          <a href="/basics/">Основы</a>
+          
+        
+          
+          <a href="/models/">Модели</a>
+          
+        
+          
+          <a href="/governance/">Governance</a>
+          
+        
+          
+          <a href="/cases/">Кейсы</a>
+          
+        
+          
+          <a href="/validators/">Валидаторы</a>
+          
+        
+          
+        
+      </nav>
+
+      <div class="footer-social">
+        <a href="https://t.me/giants_tokenomics" target="_blank" rel="noopener" title="Telegram">TG</a>
+        <a href="https://www.youtube.com/playlist?list=PLeLfGV5qnQybhgDjklLf39CJnD2aro7la" target="_blank" rel="noopener" title="YouTube">YT</a>
+        <a href="https://github.com/giantstokenomics" target="_blank" rel="noopener" title="GitHub">GH</a>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span class="footer-copy">&copy; 2026 Гиганты — Лаборатория Токеномики. Алексей Каранюк.</span>
+    </div>
+  </div>
+</footer>
+
+
+  <script src="/js/main.js"></script>
+</body>
+</html>

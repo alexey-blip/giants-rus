@@ -1,0 +1,20 @@
+{{ define "main" }}
+<div class="page-full">
+  <div class="section-header">
+    <h1>{{ .Title }}</h1>
+    {{ with .Description }}<p>{{ . }}</p>{{ end }}
+  </div>
+
+  {{ .Content }}
+
+  <div class="article-list">
+    {{ range .Pages.ByWeight }}
+    <a href="{{ .Permalink }}" class="article-card">
+      <h3>{{ .Title }}</h3>
+      {{ with .Description }}<p>{{ . }}</p>{{ end }}
+      {{ with .Date }}<time>{{ .Format "02.01.2006" }}</time>{{ end }}
+    </a>
+    {{ end }}
+  </div>
+</div>
+{{ end }}

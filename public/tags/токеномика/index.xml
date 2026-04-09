@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Токеномика on Гиганты — Лаборатория Токеномики</title>
+    <link>http://localhost:1313/tags/%D1%82%D0%BE%D0%BA%D0%B5%D0%BD%D0%BE%D0%BC%D0%B8%D0%BA%D0%B0/</link>
+    <description>Recent content in Токеномика on Гиганты — Лаборатория Токеномики</description>
+    <generator>Hugo</generator>
+    <language>ru</language>
+    <lastBuildDate>Thu, 09 Apr 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/%D1%82%D0%BE%D0%BA%D0%B5%D0%BD%D0%BE%D0%BC%D0%B8%D0%BA%D0%B0/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>5 моделей предложения токенов</title>
+      <link>http://localhost:1313/models/token-supply-models/</link>
+      <pubDate>Thu, 09 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/models/token-supply-models/</guid>
+      <description>&lt;h2 id=&#34;что-такое-модель-предложения&#34;&gt;Что такое модель предложения&lt;/h2&gt;&#xA;&lt;p&gt;Модель предложения (supply model) определяет, &lt;strong&gt;как токены появляются&lt;/strong&gt; в системе и &lt;strong&gt;как они попадают&lt;/strong&gt; к участникам. Это фундамент любой токеномики — без него невозможно спроектировать ни спрос, ни governance.&lt;/p&gt;&#xA;&lt;p&gt;Модель предложения отвечает на три вопроса:&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;&lt;strong&gt;Сколько токенов&lt;/strong&gt; существует (или будет существовать)?&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Кто получает&lt;/strong&gt; токены и на каких условиях?&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Как меняется предложение&lt;/strong&gt; со временем — растёт, сокращается или остаётся фиксированным?&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;p&gt;В практике токеномики выделяют &lt;strong&gt;пять базовых моделей&lt;/strong&gt;, каждая из которых решает свой класс задач. Проект может использовать одну модель или комбинировать несколько.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Что такое токеномика</title>
+      <link>http://localhost:1313/basics/what-is-tokenomics/</link>
+      <pubDate>Wed, 08 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/basics/what-is-tokenomics/</guid>
+      <description>&lt;h2 id=&#34;определение&#34;&gt;Определение&lt;/h2&gt;&#xA;&lt;p&gt;Токеномика — это наука о проектировании экономических систем на основе токенов. Она объединяет элементы экономики, теории игр, дизайна механизмов и компьютерных наук для создания устойчивых цифровых экосистем.&lt;/p&gt;&#xA;&lt;h2 id=&#34;зачем-нужна-токеномика&#34;&gt;Зачем нужна токеномика&lt;/h2&gt;&#xA;&lt;p&gt;Без грамотной токеномики проект обречён на провал. Токен — это не просто «монета», а экономический инструмент, который должен:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Создавать правильные стимулы для участников&lt;/li&gt;&#xA;&lt;li&gt;Обеспечивать устойчивость системы в долгосрочной перспективе&lt;/li&gt;&#xA;&lt;li&gt;Балансировать спрос и предложение&lt;/li&gt;&#xA;&lt;li&gt;Решать проблему free-rider (безбилетника)&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;ключевые-компоненты&#34;&gt;Ключевые компоненты&lt;/h2&gt;&#xA;&lt;h3 id=&#34;предложение-supply&#34;&gt;Предложение (Supply)&lt;/h3&gt;&#xA;&lt;p&gt;Модель предложения определяет, сколько токенов существует и как они распределяются:&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Агентное моделирование в токеномике</title>
+      <link>http://localhost:1313/models/agent-based-modeling/</link>
+      <pubDate>Thu, 09 Apr 2026 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/models/agent-based-modeling/</guid>
+      <description>&lt;h2 id=&#34;проблема-таблица-считает-средние-а-экономика-ломается-на-крайностях&#34;&gt;Проблема: таблица считает средние, а экономика ломается на крайностях&lt;/h2&gt;&#xA;&lt;p&gt;Большинство токеномических моделей — это таблицы. Там формула эмиссии, вестинг-график, прогноз цены, и на выходе красивый график supply на 5 лет. Это полезный инструмент, но у него есть фундаментальное ограничение.&lt;/p&gt;&#xA;&lt;p&gt;Таблица работает с &lt;strong&gt;агрегированными&lt;/strong&gt; показателями: общий supply, средняя цена, суммарный стейкинг. Она не моделирует поведение отдельных участников. А именно поведение участников определяет, выживет система или нет.&lt;/p&gt;&#xA;&#xA;&lt;div class=&#34;callout default&#34;&gt;&#xA;  &lt;div class=&#34;callout-title&#34;&gt;Пример&lt;/div&gt;&#xA;  Табличная модель стейкинга показывает: при APR 12% стейкается 40% токенов, давление на продажу умеренное. Но если 30% стейка принадлежит трём китам, и один из них решит выйти — каскадное снижение APR → паника → банк-ран. Таблица этого не покажет.&#xA;&lt;/div&gt;&#xA;&#xA;&lt;h2 id=&#34;что-такое-агентное-моделирование&#34;&gt;Что такое агентное моделирование&lt;/h2&gt;&#xA;&lt;p&gt;Агентное моделирование (agent-based modeling, ABM) — это подход, при котором система моделируется снизу вверх: через поведение отдельных участников (агентов), а не через усреднённые формулы.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

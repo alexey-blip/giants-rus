@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bonding Curve: модель предложения токеномики — Гиганты</title>
+  <meta name="description" content="Что такое bonding curve, как она работает, формулы минтинга, типы кривых предложения, примеры реализации в DeFi и loyalty-программах.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg-primary: #f8f7f4;
+      --bg-secondary: #ffffff;
+      --bg-surface: rgba(139, 92, 246, 0.05);
+      --bg-surface-hover: rgba(139, 92, 246, 0.08);
+      --border: rgba(0, 0, 0, 0.08);
+      --border-strong: rgba(139, 92, 246, 0.25);
+      --text-primary: #1a1a2e;
+      --text-secondary: #4a4a5a;
+      --text-muted: #8a8a9a;
+      --accent: #7c3aed;
+      --accent-hover: #6d28d9;
+      --accent-muted: rgba(124, 58, 237, 0.1);
+      --accent-bg: rgba(124, 58, 237, 0.05);
+      --green: #059669;
+      --orange: #d97706;
+      --red: #dc2626;
+      --font-heading: 'Space Grotesk', sans-serif;
+      --font-body: 'Lora', Georgia, serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --nav-height: 64px;
+    }
+
+    html { font-size: 16px; scroll-behavior: smooth; scroll-padding-top: calc(var(--nav-height) + 24px); }
+
+    body {
+      background: var(--bg-primary);
+      color: var(--text-secondary);
+      font-family: var(--font-body);
+      line-height: 1.8;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: var(--accent); text-decoration: none; transition: color 0.2s; }
+    a:hover { color: var(--accent-hover); }
+
+    /* ====== HEADER ====== */
+    .header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      height: var(--nav-height);
+      background: rgba(248, 247, 244, 0.9);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      padding: 0 32px;
+    }
+
+    .header-inner {
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-primary);
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-decoration: none;
+    }
+
+    .header-nav { display: flex; gap: 28px; }
+    .header-nav a {
+      font-family: var(--font-heading);
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      letter-spacing: 0.02em;
+    }
+    .header-nav a:hover { color: var(--text-primary); }
+
+    .header-cta {
+      font-family: var(--font-heading);
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      background: var(--accent);
+      color: #fff;
+      padding: 8px 20px;
+      border-radius: 8px;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+    .header-cta:hover { background: var(--accent-hover); color: #fff; }
+
+    /* ====== LAYOUT ====== */
+    .page {
+      max-width: 1060px;
+      margin: 0 auto;
+      padding: calc(var(--nav-height) + 48px) 32px 80px;
+      display: grid;
+      grid-template-columns: 1fr 220px;
+      gap: 64px;
+      align-items: start;
+    }
+
+    .main { min-width: 0; }
+
+    /* ====== SIDEBAR TOC ====== */
+    .sidebar {
+      position: sticky;
+      top: calc(var(--nav-height) + 48px);
+    }
+
+    .sidebar-title {
+      font-family: var(--font-heading);
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+
+    .sidebar-toc { list-style: none; }
+    .sidebar-toc li { margin-bottom: 8px; }
+    .sidebar-toc a {
+      font-family: var(--font-heading);
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+      display: block;
+      padding: 2px 0 2px 12px;
+      border-left: 2px solid transparent;
+      transition: all 0.2s;
+    }
+    .sidebar-toc a:hover {
+      color: var(--accent);
+      border-left-color: var(--accent);
+    }
+
+    /* ====== BREADCRUMBS ====== */
+    .breadcrumbs {
+      font-family: var(--font-heading);
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      display: flex;
+      gap: 6px;
+      margin-bottom: 32px;
+    }
+    .breadcrumbs a { color: var(--text-muted); }
+    .breadcrumbs a:hover { color: var(--accent); }
+    .breadcrumbs .sep { opacity: 0.3; }
+
+    /* ====== ARTICLE HEADER ====== */
+    .article-header {
+      margin-bottom: 48px;
+      padding-bottom: 32px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .article-label {
+      font-family: var(--font-heading);
+      font-size: 0.68rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--accent);
+      margin-bottom: 16px;
+    }
+
+    .article-header h1 {
+      font-family: var(--font-heading);
+      font-size: clamp(2rem, 4vw, 2.8rem);
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      margin-bottom: 20px;
+    }
+
+    .article-header .lead {
+      font-family: var(--font-body);
+      font-size: 1.2rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    .article-meta {
+      display: flex;
+      gap: 20px;
+      margin-top: 20px;
+      font-family: var(--font-heading);
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    /* ====== CONTENT ====== */
+    .content h2 {
+      font-family: var(--font-heading);
+      font-size: 1.55rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 56px 0 20px;
+      letter-spacing: -0.01em;
+    }
+
+    .content h3 {
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin: 36px 0 14px;
+    }
+
+    .content p {
+      font-size: 1.08rem;
+      margin-bottom: 24px;
+      line-height: 1.85;
+    }
+
+    .content strong { color: var(--text-primary); font-weight: 600; }
+
+    .content ul, .content ol {
+      margin: 0 0 24px 24px;
+      font-size: 1.05rem;
+    }
+    .content li { margin-bottom: 10px; line-height: 1.7; }
+
+    /* Links */
+    .content a {
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      text-decoration-color: rgba(168, 85, 247, 0.3);
+    }
+    .content a:hover { text-decoration-color: var(--accent); }
+
+    /* Code */
+    .content code {
+      font-family: var(--font-mono);
+      font-size: 0.84em;
+      background: rgba(124, 58, 237, 0.07);
+      color: var(--accent);
+      padding: 2px 7px;
+      border-radius: 4px;
+    }
+
+    .content pre {
+      background: #1a1a2e;
+      border: none;
+      border-radius: 8px;
+      padding: 20px 24px;
+      overflow-x: auto;
+      margin: 28px 0;
+      font-family: var(--font-mono);
+      font-size: 0.84rem;
+      line-height: 1.7;
+      color: #e0e0ea;
+    }
+    .content pre code { background: none; padding: 0; color: #e0e0ea; }
+
+    /* Callout — HLG-style border-left */
+    .callout {
+      padding: 24px 28px;
+      margin: 32px 0;
+      background: linear-gradient(90deg, var(--accent-bg), transparent 70%);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 8px 8px 0;
+    }
+
+    .callout-title {
+      font-family: var(--font-heading);
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
+    .callout p { margin-bottom: 8px; font-size: 1rem; }
+    .callout p:last-child { margin-bottom: 0; }
+
+    .callout.warning { border-left-color: var(--orange); background: linear-gradient(90deg, rgba(217, 119, 6, 0.06), transparent 70%); }
+
+    /* Blockquote */
+    .content blockquote {
+      border-left: 3px solid var(--border-strong);
+      padding: 16px 24px;
+      margin: 28px 0;
+      font-style: italic;
+      color: var(--text-muted);
+    }
+
+    /* Formula */
+    .formula {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 28px 32px;
+      margin: 32px 0;
+      text-align: center;
+    }
+    .formula .math {
+      font-family: var(--font-mono);
+      font-size: 1.2rem;
+      color: var(--text-primary);
+      letter-spacing: 0.01em;
+    }
+    .formula .desc {
+      font-family: var(--font-heading);
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 12px;
+    }
+
+    /* Table */
+    .content table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 28px 0;
+      font-family: var(--font-heading);
+      font-size: 0.88rem;
+    }
+    .content th, .content td {
+      padding: 12px 16px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .content th {
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .content td { color: var(--text-secondary); }
+    .content td strong { color: var(--text-primary); }
+    .content tr:hover td { background: var(--accent-bg); }
+
+    /* CTA */
+    .article-cta {
+      padding: 40px;
+      margin: 56px 0;
+      background: linear-gradient(135deg, var(--accent-bg), transparent 60%);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 12px 12px 0;
+    }
+    .article-cta h3 {
+      font-family: var(--font-heading);
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 10px;
+    }
+    .article-cta p { margin-bottom: 20px; font-size: 1rem; }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--accent);
+      color: #fff;
+      font-family: var(--font-heading);
+      font-weight: 600;
+      font-size: 0.82rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 12px 28px;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+    .btn-primary:hover { background: var(--accent-hover); color: #fff; transform: translateY(-1px); box-shadow: 0 6px 24px rgba(168, 85, 247, 0.3); }
+
+    /* Tags */
+    .article-tags {
+      border-top: 1px solid var(--border);
+      padding-top: 32px;
+      margin-top: 56px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .tag {
+      font-family: var(--font-heading);
+      font-size: 0.72rem;
+      font-weight: 500;
+      padding: 4px 12px;
+      border-radius: 100px;
+      background: var(--accent-bg);
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+    }
+
+    /* ====== RESPONSIVE ====== */
+    @media (max-width: 900px) {
+      .page { grid-template-columns: 1fr; gap: 0; padding-left: 20px; padding-right: 20px; }
+      .sidebar { display: none; }
+      .header-nav { display: none; }
+      .header-cta { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div class="header-inner">
+      <a href="../лендинг/" class="logo">
+        <img src="../assets/logo/Гиганты_b1.png" alt="Гиганты" style="height: 28px; width: auto;">
+      </a>
+      <nav class="header-nav">
+        <a href="../лендинг/#services">Услуги</a>
+        <a href="../лендинг/#approach">Подход</a>
+        <a href="../лендинг/#cases">Кейсы</a>
+        <a href="../лендинг/#team">Команда</a>
+        <a href="../лендинг/#contact">Контакты</a>
+      </nav>
+      <a href="../лендинг/#contact" class="header-cta">Заказать токеномику</a>
+    </div>
+  </header>
+
+  <div class="page">
+    <main class="main">
+
+      <nav class="breadcrumbs">
+        <a href="../лендинг/">Главная</a><span class="sep">/</span>
+        <a href="#">Модели</a><span class="sep">/</span>
+        <span>Bonding Curve</span>
+      </nav>
+
+      <div class="article-header">
+        <div class="article-label">Модели предложения</div>
+        <h1>Bonding Curve: модель предложения в токеномике</h1>
+        <p class="lead">Как кривая предложения связывает цену токена со спросом, почему это самая честная модель минтинга и где она применяется&nbsp;&mdash; от DeFi до программ лояльности.</p>
+        <div class="article-meta">
+          <span>Алексей Каранюк</span>
+          <span>&middot;</span>
+          <span>15 мин</span>
+          <span>&middot;</span>
+          <span>Апрель 2026</span>
+        </div>
+      </div>
+
+      <div class="content">
+
+        <h2 id="what">Что такое bonding curve</h2>
+
+        <p><strong>Bonding curve</strong> (кривая предложения)&nbsp;&mdash; это математическая функция, которая динамически определяет цену токена на основе его совокупного предложения. Чем больше токенов наминчено, тем выше цена следующего.</p>
+
+        <p>Ключевой принцип прост: <strong>чем раньше&nbsp;&mdash; тем дешевле</strong>. Ранние участники получают токены по более низкой цене, что создаёт естественный стимул для раннего участия в проекте.</p>
+
+        <p>В отличие от традиционных моделей (фиксированная цена, аукцион, листинг на бирже), bonding curve обеспечивает прямую связь между спросом и предложением без посредников: смарт-контракт автоматически минтит токены при покупке и может сжигать при продаже.</p>
+
+        <div class="callout">
+          <div class="callout-title">Почему это важно</div>
+          <p>Bonding curve считается <strong>самой честной и понятной моделью минтинга</strong> со стороны покупателя: цена определяется алгоритмом, а не решениями команды. Каждый участник видит, по какой цене минтят токены до и после него.</p>
+        </div>
+
+        <h2 id="supply-models">Место bonding curve среди моделей предложения</h2>
+
+        <p>Модели предложения токенов отвечают на вопрос: <strong>как и за что стейкхолдеры получают токены</strong>. В курсе МФТИ по токеномике выделяются пять основных моделей:</p>
+
+        <table>
+          <thead><tr><th>Модель</th><th>Логика</th><th>Пример</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Вестинг</strong></td><td>N токенов в течение M месяцев после cliff-периода</td><td>Near Protocol, Solice</td></tr>
+            <tr><td><strong>Bonding Curve</strong></td><td>Минти токен по формуле P&nbsp;=&nbsp;f(supply)</td><td>pump.fun, Loyalty</td></tr>
+            <tr><td><strong>Airdrop</strong></td><td>Раздача за целевые действия</td><td>Uniswap, Optimism</td></tr>
+            <tr><td><strong>Reward</strong></td><td>Вознаграждение за действия (P2E, PoW, PoS)</td><td>Bitcoin, Notcoin</td></tr>
+            <tr><td><strong>DEX / CEX</strong></td><td>Покупка через пул ликвидности или ордербук</td><td>Uniswap&nbsp;V2, Bybit</td></tr>
+          </tbody>
+        </table>
+
+        <p>Главное отличие bonding curve от модели вестинга: в вестинге число токенов фиксировано заранее и не зависит от числа пользователей. Пришло 1,000 или 100,000 пользователей&nbsp;&mdash; аллокация та же. Bonding curve динамически адаптирует эмиссию к реальному спросу.</p>
+
+        <h2 id="math">Математика: формула минтинга</h2>
+
+        <p>Базовая формула bonding curve определяет <strong>цену минтинга очередного токена</strong> как функцию от совокупного предложения:</p>
+
+        <div class="formula">
+          <div class="math">P(T) = A + B &middot; T<sup>C</sup></div>
+          <div class="desc">P&nbsp;&mdash; цена минтинга &middot; T&nbsp;&mdash; общее число наминченных токенов &middot; A, B, C&nbsp;&mdash; коэффициенты</div>
+        </div>
+
+        <h3>Что означают параметры</h3>
+
+        <ul>
+          <li><strong>A</strong>&nbsp;&mdash; начальная (минимальная) цена токена. Даже при нулевом предложении цена не&nbsp;равна нулю.</li>
+          <li><strong>B</strong>&nbsp;&mdash; коэффициент масштаба. Определяет, насколько быстро растёт цена с увеличением supply.</li>
+          <li><strong>C</strong>&nbsp;&mdash; показатель степени (крутизна кривой). При C=1 рост линейный, при C=2 квадратичный, при C=0.5&nbsp;&mdash; корневой.</li>
+        </ul>
+
+        <div class="callout warning">
+          <div class="callout-title">Пример из лекции МФТИ</div>
+          <p>При формуле <code>P = 0.10 + 0.00001 &middot; T^1.5</code> цена первого токена составит $0.10. После минтинга 10,000 токенов цена вырастет до $10.10. Подбор параметров&nbsp;&mdash; ключевая задача токеномиста.</p>
+        </div>
+
+        <!-- GNTS Calculator Component -->
+        <div class="gnts-calc" id="gnts-calc-bc">
+          <div class="gnts-calc-title" style="font-family:var(--font-heading);font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.12em;color:var(--accent);margin-bottom:20px;">Калькулятор bonding curve</div>
+          <div style="display:grid;grid-template-columns:280px 1fr;gap:32px;align-items:start;">
+            <div style="display:flex;flex-direction:column;gap:16px;">
+              <div><label style="display:flex;justify-content:space-between;font-family:var(--font-heading);font-size:0.82rem;font-weight:500;color:var(--text-primary);margin-bottom:4px;">Начальная цена (A) <span id="bc-val-a" style="font-family:var(--font-mono);font-size:0.8rem;color:var(--accent);background:var(--accent-bg);padding:2px 8px;border-radius:4px;">0.10</span></label><input type="range" id="bc-a" min="0.01" max="1" step="0.01" value="0.10" style="width:100%;height:4px;-webkit-appearance:none;appearance:none;background:var(--border);border-radius:2px;outline:none;"></div>
+              <div><label style="display:flex;justify-content:space-between;font-family:var(--font-heading);font-size:0.82rem;font-weight:500;color:var(--text-primary);margin-bottom:4px;">Масштаб (B) <span id="bc-val-b" style="font-family:var(--font-mono);font-size:0.8rem;color:var(--accent);background:var(--accent-bg);padding:2px 8px;border-radius:4px;">0.00001</span></label><input type="range" id="bc-b" min="0.000001" max="0.001" step="0.000001" value="0.00001" style="width:100%;height:4px;-webkit-appearance:none;appearance:none;background:var(--border);border-radius:2px;outline:none;"></div>
+              <div><label style="display:flex;justify-content:space-between;font-family:var(--font-heading);font-size:0.82rem;font-weight:500;color:var(--text-primary);margin-bottom:4px;">Крутизна (C) <span id="bc-val-c" style="font-family:var(--font-mono);font-size:0.8rem;color:var(--accent);background:var(--accent-bg);padding:2px 8px;border-radius:4px;">1.50</span></label><input type="range" id="bc-c" min="0.5" max="3" step="0.1" value="1.5" style="width:100%;height:4px;-webkit-appearance:none;appearance:none;background:var(--border);border-radius:2px;outline:none;"></div>
+              <div><label style="display:flex;justify-content:space-between;font-family:var(--font-heading);font-size:0.82rem;font-weight:500;color:var(--text-primary);margin-bottom:4px;">Макс. supply <span id="bc-val-s" style="font-family:var(--font-mono);font-size:0.8rem;color:var(--accent);background:var(--accent-bg);padding:2px 8px;border-radius:4px;">50 000</span></label><input type="range" id="bc-s" min="1000" max="500000" step="1000" value="50000" style="width:100%;height:4px;-webkit-appearance:none;appearance:none;background:var(--border);border-radius:2px;outline:none;"></div>
+            </div>
+            <div>
+              <div style="background:var(--bg-primary);border:1px solid var(--border);border-radius:8px;overflow:hidden;"><svg id="bc-svg" viewBox="0 0 500 280" preserveAspectRatio="xMidYMid meet" style="display:block;width:100%;height:280px;"></svg></div>
+              <table style="margin-top:16px;width:100%;border-collapse:collapse;font-size:0.8rem;"><thead><tr><th style="text-align:left;font-family:var(--font-heading);font-weight:600;font-size:0.7rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted);padding:6px 10px;border-bottom:1px solid var(--border);">Supply</th><th style="text-align:left;font-family:var(--font-heading);font-weight:600;font-size:0.7rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted);padding:6px 10px;border-bottom:1px solid var(--border);">Цена</th><th style="text-align:left;font-family:var(--font-heading);font-weight:600;font-size:0.7rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted);padding:6px 10px;border-bottom:1px solid var(--border);">Совокупная стоимость</th></tr></thead><tbody id="bc-tbody"></tbody></table>
+            </div>
+          </div>
+        </div>
+        <script>
+        (function(){var $=function(id){return document.getElementById(id)};var sl={a:$('bc-a'),b:$('bc-b'),c:$('bc-c'),s:$('bc-s')};var vl={a:$('bc-val-a'),b:$('bc-val-b'),c:$('bc-val-c'),s:$('bc-val-s')};var svg=$('bc-svg'),tbody=$('bc-tbody');function P(t,a,b,c){return a+b*Math.pow(t,c)}function tc(t,a,b,c){var n=200,h=t/n,s=0;for(var i=0;i<n;i++){var t0=i*h,t1=(i+1)*h;s+=(P(t0,a,b,c)+P(t1,a,b,c))*h/2}return s}function fmt(v){if(v>=1e6)return(v/1e6).toFixed(2)+'M';if(v>=1e3)return(v/1e3).toFixed(1)+'K';if(v>=1)return v.toFixed(2);if(v>=0.001)return v.toFixed(4);return v.toExponential(2)}function render(){var a=+sl.a.value,b=+sl.b.value,c=+sl.c.value,maxS=+sl.s.value;vl.a.textContent=a.toFixed(2);vl.b.textContent=b<0.0001?b.toExponential(1):b.toFixed(6);vl.c.textContent=c.toFixed(2);vl.s.textContent=maxS.toLocaleString('ru-RU');var W=500,H=280,pd={t:20,r:20,b:40,l:60};var pw=W-pd.l-pd.r,ph=H-pd.t-pd.b;var pts=[],maxP=0;for(var i=0;i<=100;i++){var t=(i/100)*maxS;var p=P(t,a,b,c);pts.push({t:t,p:p});if(p>maxP)maxP=p}maxP=maxP*1.1||1;var polyPts=pts.map(function(pt){return(pd.l+(pt.t/maxS)*pw)+','+(pd.t+ph-(pt.p/maxP)*ph)}).join(' ');var accent=getComputedStyle(document.documentElement).getPropertyValue('--accent').trim()||'#7c3aed';var muted=getComputedStyle(document.documentElement).getPropertyValue('--text-muted').trim()||'#8a8a9a';var h='';for(var g=0;g<=4;g++){var gy=pd.t+(g/4)*ph;h+='<line x1="'+pd.l+'" y1="'+gy+'" x2="'+(W-pd.r)+'" y2="'+gy+'" stroke="'+muted+'" stroke-opacity="0.15" stroke-dasharray="4,4"/>';h+='<text x="'+(pd.l-8)+'" y="'+(gy+4)+'" text-anchor="end" fill="'+muted+'" font-size="10" font-family="JetBrains Mono,monospace">$'+fmt(maxP*(1-g/4))+'</text>'}for(var g=0;g<=4;g++){var gx=pd.l+(g/4)*pw;h+='<text x="'+gx+'" y="'+(H-8)+'" text-anchor="middle" fill="'+muted+'" font-size="10" font-family="JetBrains Mono,monospace">'+fmt(maxS*(g/4))+'</text>'}h+='<polygon points="'+pd.l+','+(pd.t+ph)+' '+polyPts+' '+(pd.l+pw)+','+(pd.t+ph)+'" fill="'+accent+'" opacity="0.08"/>';h+='<polyline points="'+polyPts+'" fill="none" stroke="'+accent+'" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>';svg.innerHTML=h;var rows=[0,0.1,0.25,0.5,0.75,1].map(function(f){var t=Math.round(f*maxS);return'<tr><td style="padding:5px 10px;font-family:var(--font-mono);font-size:0.78rem;color:var(--text-secondary);border-bottom:1px solid var(--border)">'+t.toLocaleString('ru-RU')+'</td><td style="padding:5px 10px;font-family:var(--font-mono);font-size:0.78rem;color:var(--text-secondary);border-bottom:1px solid var(--border)">$'+fmt(P(t,a,b,c))+'</td><td style="padding:5px 10px;font-family:var(--font-mono);font-size:0.78rem;color:var(--text-secondary);border-bottom:1px solid var(--border)">$'+fmt(tc(t,a,b,c))+'</td></tr>'});tbody.innerHTML=rows.join('')}Object.values(sl).forEach(function(s){s.addEventListener('input',render)});render()})();
+        </script>
+        <!-- End Calculator -->
+
+        <h3>Средневзвешенная цена</h3>
+
+        <p>При использовании bonding curve в платёжных системах (loyalty, payments) часто применяется <strong>средневзвешенная историческая цена</strong>:</p>
+
+        <div class="formula">
+          <div class="math">P<sub>p</sub>(T) = A + B &middot; T<sup>C</sup> / (C + 1)</div>
+          <div class="desc">Нечувствительна к мгновенным скачкам спроса &middot; Упрощает расчёты на фронтенде</div>
+        </div>
+
+        <h2 id="types">Типы кривых</h2>
+
+        <table>
+          <thead><tr><th>Тип</th><th>Формула</th><th>Свойство</th><th>Применение</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Линейная</strong></td><td>P = A + B&middot;T</td><td>Равномерный рост</td><td>Простые модели, loyalty</td></tr>
+            <tr><td><strong>Полиномиальная</strong></td><td>P = A + B&middot;T<sup>C</sup></td><td>Ускоряющийся рост</td><td>Стандарт для token sale</td></tr>
+            <tr><td><strong>Экспоненциальная</strong></td><td>P = A&middot;e<sup>B&middot;T</sup></td><td>Агрессивный рост</td><td>Scarce assets, NFT</td></tr>
+            <tr><td><strong>Логарифмическая</strong></td><td>P = A + B&middot;ln(T)</td><td>Быстрый старт, стабилизация</td><td>Массовые продукты</td></tr>
+            <tr><td><strong>Step function</strong></td><td>P<sub>i</sub> при T&isin;[T<sub>i</sub>,T<sub>i+1</sub>)</td><td>Ступенчатый рост</td><td>pump.fun (Solana)</td></tr>
+          </tbody>
+        </table>
+
+        <p>Платформа <strong>pump.fun</strong> на Solana использует step function&nbsp;&mdash; цена растёт ступенями. Когда кривая достигает порога, ликвидность автоматически переносится на DEX (Raydium), и дальше цену определяет рынок.</p>
+
+        <h2 id="usecases">Применения</h2>
+
+        <h3>Token Launch / Fundraising</h3>
+
+        <p>Bonding curve используется для честного распределения токенов на ранней стадии проекта. Инвесторы минтят токены по формуле&nbsp;&mdash; ранние получают лучшую цену без привилегированных раундов.</p>
+
+        <p>Пример задачи из курса МФТИ: предпродажа 5% токенов инвесторам по bonding curve со стартовой ценой $0.10 и целевой ценой $0.25 через 6 месяцев.</p>
+
+        <h3>DeFi и AMM</h3>
+
+        <p>AMM вроде Uniswap используют вариацию bonding curve для ценообразования: формула <code>x &middot; y = k</code> задаёт кривую, по которой цена меняется при каждой сделке.</p>
+
+        <h3>Программы лояльности</h3>
+
+        <p>Один из самых перспективных кейсов&nbsp;&mdash; <strong>Bonding Curve Loyalty</strong>: кэшбек в токенах для e-commerce.</p>
+
+        <ol>
+          <li>Покупатель платит в USDC (Shopify, Stripe, Coinbase Commerce)</li>
+          <li>Часть суммы идёт в bonding curve контракт</li>
+          <li>Смарт-контракт минтит токены по текущей цене кривой</li>
+          <li>Токены можно потратить на скидки или продать обратно (burn)</li>
+        </ol>
+
+        <div class="formula">
+          <div class="math">&Delta;T = S<sub>c</sub> &middot; k<sub>t</sub> / P<sub>m</sub>(T<sub>total</sub>)</div>
+          <div class="desc">S<sub>c</sub>&nbsp;&mdash; сумма кэшбека &middot; k<sub>t</sub>&nbsp;&mdash; процент в токенах &middot; P<sub>m</sub>&nbsp;&mdash; цена минтинга</div>
+        </div>
+
+        <h2 id="pros-cons">Преимущества и ограничения</h2>
+
+        <h3>Преимущества</h3>
+        <ul>
+          <li><strong>Прозрачность</strong>&nbsp;&mdash; цена определяется алгоритмом, любой может проверить</li>
+          <li><strong>Непрерывная ликвидность</strong>&nbsp;&mdash; токен можно купить в любой момент</li>
+          <li><strong>Стимул ранних участников</strong>&nbsp;&mdash; вознаграждение за раннее участие без привилегий</li>
+          <li><strong>Связь цены со спросом</strong>&nbsp;&mdash; эмиссия адаптируется к числу участников</li>
+          <li><strong>Автономность</strong>&nbsp;&mdash; работает без маркет-мейкера и посредника</li>
+        </ul>
+
+        <h3>Ограничения</h3>
+        <ul>
+          <li><strong>Сложность реализации</strong>&nbsp;&mdash; требует грамотного смарт-контракта</li>
+          <li><strong>Нет price discovery</strong>&nbsp;&mdash; цена алгоритмическая, а не рыночная</li>
+          <li><strong>Ликвидность при burn</strong>&nbsp;&mdash; казначейство должно быть обеспечено</li>
+          <li><strong>Расхождение с DEX</strong>&nbsp;&mdash; при листинге цена может отличаться от кривой</li>
+        </ul>
+
+        <div class="callout">
+          <div class="callout-title">Ключевой вывод</div>
+          <p>Bonding curve&nbsp;&mdash; модель <strong>предпродажи и минтинга</strong>, а не финальный рынок. Большинство проектов используют кривую на раннем этапе, затем переходят к пулу ликвидности на DEX.</p>
+        </div>
+
+        <h2 id="practice">Практика: подбор параметров</h2>
+
+        <p>Задача токеномиста&nbsp;&mdash; подобрать A, B и C под бизнес-ограничения:</p>
+
+        <pre><code>Условия (домашнее задание МФТИ):
+- Начальная цена: $0.10
+- Через 3 мес: $0.20 – $0.40
+- Через 12 мес: $0.60 – $1.00
+
+Входные данные:
+- Пользователи: 1,000 → рост 500-2,000/мес
+- Средний чек: $100-$130
+- Кэшбек: 5-10%</code></pre>
+
+        <p>Подход к решению:</p>
+        <ol>
+          <li>Прогнозируем кумулятивный объём средств через bonding curve по месяцам</li>
+          <li>Подставляем в формулу и решаем систему неравенств</li>
+          <li>Проверяем в Google Sheets или Python, визуализируем в Desmos</li>
+          <li>Тестируем чувствительность: что если пользователей в 2x больше/меньше?</li>
+        </ol>
+
+        <h2 id="examples">Примеры реализации</h2>
+
+        <h3>8lends: bonding curve для кредитного протокола</h3>
+
+        <p>DeFi-протокол кредитования использует другую форму bonding curve с &alpha;-параметром:</p>
+
+        <div class="formula">
+          <div class="math">P<sub>mint</sub>($L) = P(0) &times; ($L<sub>minted</sub>)<sup>&alpha;</sup></div>
+          <div class="desc">P(0)&nbsp;&mdash; базовая цена (1 USDT) &middot; $L<sub>minted</sub>&nbsp;&mdash; совокупное число наминченных токенов &middot; &alpha;&nbsp;&mdash; параметр крутизны</div>
+        </div>
+
+        <p>Расчёт стоимости минтинга N новых токенов (интегральная формула):</p>
+
+        <div class="formula">
+          <div class="math">Cost(&Delta;$L, $L<sub>0</sub>) = P(0)/(&alpha;+1) &times; [($L<sub>0</sub>+&Delta;$L)<sup>&alpha;+1</sup> &minus; ($L<sub>0</sub>)<sup>&alpha;+1</sup>]</div>
+          <div class="desc">Показывает экспоненциальный рост стоимости: первый токен = 1 USDT, тысячный = 25 USDT</div>
+        </div>
+
+        <!-- GNTS Case Card: 8lends -->
+        <div style="padding:24px 28px;margin:28px 0;background:linear-gradient(90deg,var(--accent-bg),transparent 70%);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;border-top:1px solid var(--border);border-right:1px solid var(--border);border-bottom:1px solid var(--border);">
+          <div style="font-family:var(--font-heading);font-size:0.65rem;font-weight:600;text-transform:uppercase;letter-spacing:0.12em;color:var(--accent);margin-bottom:8px;">Кейс</div>
+          <h4 style="font-family:var(--font-heading);font-size:1.05rem;font-weight:700;color:var(--text-primary);margin-bottom:8px;">8lends: Proof-of-Loan с дефляционной моделью</h4>
+          <p style="font-size:0.95rem;margin-bottom:12px;">10 строк таблиц с прогрессией цены, 4 формулы (минтинг, стоимость, обратный расчёт, кумулятивная), анализ конкурентов (Goldfinch, Clearpool, Atlendis).</p>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;">
+            <span style="font-family:var(--font-heading);font-size:0.68rem;padding:2px 10px;border-radius:100px;background:var(--accent-bg);color:var(--text-muted);border:1px solid var(--border);">DeFi Lending</span>
+            <span style="font-family:var(--font-heading);font-size:0.68rem;padding:2px 10px;border-radius:100px;background:var(--accent-bg);color:var(--text-muted);border:1px solid var(--border);">Bonding Curve</span>
+            <span style="font-family:var(--font-heading);font-size:0.68rem;padding:2px 10px;border-radius:100px;background:var(--accent-bg);color:var(--text-muted);border:1px solid var(--border);">Proof-of-Loan</span>
+          </div>
+        </div>
+
+        <h3>pump.fun (Solana)</h3>
+        <p>Step function bonding curve. Токен минтится по ступенчатой цене. При достижении порога ликвидность автоматически переносится на Raydium (DEX). Стандарт для запуска мемкоинов 2024-2025.</p>
+
+        <h3>Bonding Curve Loyalty (кейс Giants)</h3>
+        <p>Кэшбек в токенах для e-commerce. Интеграция с Shopify, Stripe, Coinbase Commerce. Параметры A, B, C настраиваются мерчантом через админку. Buy-back с дисконтом обеспечивает обратную ликвидность.</p>
+
+        <h3>Bancor / Continuous Token Model</h3>
+        <p>Одна из первых реализаций bonding curve в блокчейне (2017). Токены минтятся и сжигаются автоматически через reserve pool с заданным коэффициентом резервирования.</p>
+
+        <div class="article-cta">
+          <h3>Нужна bonding curve для вашего проекта?</h3>
+          <p>Подберём параметры кривой, построим модель в Google Sheets с симуляциями и подготовим ТЗ для разработчиков.</p>
+          <a href="https://t.me/karanyuk" class="btn-primary" target="_blank" rel="noopener">Обсудить проект</a>
+        </div>
+
+      </div>
+
+      <div class="article-tags">
+        <span class="tag">bonding curve</span>
+        <span class="tag">модель предложения</span>
+        <span class="tag">token supply</span>
+        <span class="tag">DeFi</span>
+        <span class="tag">loyalty</span>
+        <span class="tag">МФТИ</span>
+      </div>
+
+    </main>
+
+    <aside class="sidebar">
+      <div class="sidebar-title">Содержание</div>
+      <ul class="sidebar-toc">
+        <li><a href="#what">Что такое bonding curve</a></li>
+        <li><a href="#supply-models">Среди моделей предложения</a></li>
+        <li><a href="#math">Математика минтинга</a></li>
+        <li><a href="#types">Типы кривых</a></li>
+        <li><a href="#usecases">Применения</a></li>
+        <li><a href="#pros-cons">Плюсы и минусы</a></li>
+        <li><a href="#practice">Подбор параметров</a></li>
+        <li><a href="#examples">Примеры реализации</a></li>
+      </ul>
+    </aside>
+  </div>
+
+</body>
+</html>
