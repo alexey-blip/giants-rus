@@ -29,6 +29,18 @@
 
   <link rel="stylesheet" href="/css/style.css?v={{ now.Unix }}">
 
+  <!-- Viewport-proportional scaling: scales everything for large monitors -->
+  <script>
+    (function() {
+      var vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+      if (vw > 1500) {
+        // Target ~1500px effective viewport: 1920→1.28, 2240→1.49, 2560→1.71
+        var zoom = Math.min(vw / 1500, 1.8);
+        document.documentElement.style.zoom = zoom;
+      }
+    })();
+  </script>
+
   <!-- Yandex.Metrika counter -->
   <script type="text/javascript">
     (function(m,e,t,r,i,k,a){

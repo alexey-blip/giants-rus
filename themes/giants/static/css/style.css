@@ -64,16 +64,7 @@ html {
   scroll-padding-top: calc(var(--nav-height) + 24px);
 }
 
-/* Large screens: scale up base size so content doesn't feel tiny */
-@media (min-width: 1600px) {
-  html { font-size: 18px; }
-}
-@media (min-width: 2000px) {
-  html { font-size: 20px; }
-}
-@media (min-width: 2400px) {
-  html { font-size: 22px; }
-}
+/* Viewport scaling is applied via JS in baseof.html */
 
 /* Focus indicators (WCAG 2.4.7) */
 a:focus-visible,
@@ -375,6 +366,7 @@ h1, h2, h3, h4 {
   position: relative;
   padding: 120px 0;
   z-index: 1;
+  overflow-x: clip;
 }
 
 /* ====== BUTTONS ====== */
