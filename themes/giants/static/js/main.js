@@ -7,7 +7,9 @@
   burger.addEventListener('click', function() {
     burger.classList.toggle('open');
     mobileNav.classList.toggle('open');
-    document.body.style.overflow = mobileNav.classList.contains('open') ? 'hidden' : '';
+    var isOpen = mobileNav.classList.contains('open');
+    burger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    document.body.style.overflow = isOpen ? 'hidden' : '';
   });
 
   // Close on link click
@@ -15,6 +17,7 @@
     link.addEventListener('click', function() {
       burger.classList.remove('open');
       mobileNav.classList.remove('open');
+      burger.setAttribute('aria-expanded', 'false');
       document.body.style.overflow = '';
     });
   });

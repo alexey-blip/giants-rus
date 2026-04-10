@@ -35,8 +35,8 @@ enableRobotsTXT = true
   logo = "/images/logo.svg"
   favicon = "/images/favicon.ico"
   ogImage = "/images/og-default.png"
-  ctaConsultation = "https://tokenomika.pro/consultation/"
-  ctaOrder = "https://tokenomika.pro/order/"
+  ctaConsultation = "https://t.me/karanyuk"
+  ctaOrder = "https://t.me/karanyuk"
   telegram = "https://t.me/giants_tokenomics"
   youtube = "https://www.youtube.com/playlist?list=PLeLfGV5qnQybhgDjklLf39CJnD2aro7la"
 

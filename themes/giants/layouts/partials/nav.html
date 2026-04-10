@@ -13,9 +13,9 @@
       {{ end }}
     </nav>
 
-    <a href="{{ .Site.Params.ctaOrder }}" class="header-cta">Заказать токеномику</a>
+    <a href="{{ .Site.Params.ctaOrder }}" class="header-cta" target="_blank" rel="noopener">Заказать токеномику</a>
 
-    <button class="burger" aria-label="Меню">
+    <button class="burger" aria-label="Меню" aria-expanded="false" aria-controls="mobile-nav">
       <span></span>
       <span></span>
       <span></span>
@@ -23,11 +23,11 @@
   </div>
 </header>
 
-<div class="mobile-nav">
+<nav class="mobile-nav" id="mobile-nav" aria-label="Мобильная навигация">
   {{ range .Site.Menus.main }}
     {{ if lt .Weight 100 }}
     <a href="{{ .URL }}">{{ .Name }}</a>
     {{ end }}
   {{ end }}
-  <a href="{{ .Site.Params.ctaOrder }}" class="header-cta">Заказать токеномику</a>
-</div>
+  <a href="{{ .Site.Params.ctaOrder }}" class="header-cta" target="_blank" rel="noopener">Заказать токеномику</a>
+</nav>
