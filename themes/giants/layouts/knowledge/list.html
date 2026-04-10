@@ -18,8 +18,13 @@
         <h2>{{ index $titles $key }}</h2>
         <p class="knowledge-section-desc">{{ index $descs $key }}</p>
         <div class="article-list">
+          {{ $tagNames := dict "basics" "основы" "models" "модели" "governance" "governance" "knowledge" "стратегия" "validators" "валидаторы" }}
           {{ range $pages.ByWeight }}
           <a href="{{ .Permalink }}" class="article-card">
+            <div class="article-meta">
+              <span class="article-tag article-tag--{{ $key }}">{{ index $tagNames $key }}</span>
+              <span class="article-readtime">{{ .ReadingTime }} мин</span>
+            </div>
             <h3>{{ .Title }}</h3>
             {{ with .Description }}<p>{{ . }}</p>{{ end }}
           </a>

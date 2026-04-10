@@ -66,20 +66,21 @@
   window.addEventListener('resize', resize);
 })();
 
-// ====== Scroll-triggered animations ======
+// ====== Scroll-triggered animations (continuous) ======
 (function() {
   var services = document.getElementById('services');
   if (!services) return;
 
+  var cards = services.querySelectorAll('.service-card');
   var observer = new IntersectionObserver(function(entries) {
     entries.forEach(function(entry) {
       if (entry.isIntersecting) {
         entry.target.classList.add('in-view');
-        observer.unobserve(entry.target);
       }
     });
   }, { threshold: 0.15 });
 
+  cards.forEach(function(card) { observer.observe(card); });
   observer.observe(services);
 })();
 

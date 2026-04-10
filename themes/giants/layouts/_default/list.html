@@ -5,14 +5,19 @@
     {{ with .Description }}<p>{{ . }}</p>{{ end }}
   </div>
 
-  {{ .Content }}
+  {{ with .Content }}{{ . }}{{ end }}
 
   <div class="article-list">
+    {{ $sectionTag := dict "basics" "основы" "models" "модели" "governance" "governance" "knowledge" "стратегия" "validators" "валидаторы" "cases" "кейсы" }}
     {{ range .Pages.ByWeight }}
     <a href="{{ .Permalink }}" class="article-card">
+      <div class="article-meta">
+        {{ $sec := .Section }}
+        <span class="article-tag article-tag--{{ $sec }}">{{ index $sectionTag $sec | default $sec }}</span>
+        <span class="article-readtime">{{ .ReadingTime }} мин</span>
+      </div>
       <h3>{{ .Title }}</h3>
       {{ with .Description }}<p>{{ . }}</p>{{ end }}
-      {{ with .Date }}<time>{{ .Format "02.01.2006" }}</time>{{ end }}
     </a>
     {{ end }}
   </div>
