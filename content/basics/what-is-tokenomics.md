@@ -163,7 +163,7 @@ oninput="updateCalc()">
 </div>
 
 <div style="margin-top:24px">
-<svg id="calc-chart" viewBox="0 0 600 200" style="width:100%;max-width:600px;height:auto"></svg>
+<svg id="calc-chart" viewBox="0 0 700 200" style="width:100%;max-width:700px;height:auto"></svg>
 <div id="calc-result" style="margin-top:12px;padding:16px;border-radius:8px;font-size:15px;line-height:1.6"></div>
 </div>
 </div>
@@ -191,7 +191,7 @@ function updateCalc(){
 
   // Chart
   var maxVal=Math.max(supply,demand);
-  var barMax=420;
+  var barMax=360;
   var barLeft=140;
   var sw=Math.round(supply/maxVal*barMax);
   var dw=Math.round(demand/maxVal*barMax);
