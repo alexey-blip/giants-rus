@@ -17,11 +17,12 @@
 | market cap | капитализация | market cap → рыночная капитализация |
 | transaction volume | объём транзакций | — |
 | holding reward | награда за удержание | — |
+| vesting | вестинг | vesting schedule → график вестинга |
 
 ## Допустимые англицизмы (нет русского аналога)
 
 - staking, DeFi, NFT, AMM, DEX, CEX, TVL, APY, APR
-- bonding curve, vesting, airdrop, slashing
+- bonding curve, airdrop, slashing
 - governance (в контексте DAO)
 - TGE (Token Generation Event)
 - EIP-1559, PoS, PoW

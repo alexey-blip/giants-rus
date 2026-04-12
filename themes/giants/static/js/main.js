@@ -135,6 +135,19 @@ function scrollCarousel(dir) {
   update();
 })();
 
+// ====== TOC toggle (tablet) ======
+(function() {
+  var toc = document.querySelector('.sidebar-toc');
+  if (!toc) return;
+
+  var title = toc.querySelector('.sidebar-toc-title');
+  if (!title) return;
+
+  title.addEventListener('click', function() {
+    toc.classList.toggle('toc-open');
+  });
+})();
+
 // ====== Code copy (for gnts-code shortcode) ======
 function gntsCodeCopy(btn) {
   var code = btn.closest('.gnts-code').querySelector('code');
